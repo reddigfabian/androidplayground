@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="mainListItemViewModel"
+            type="com.fabian.androidplayground.ui.main.list.viewmodels.MainListItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainListItemRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{mainListItemViewModel::onClick}">
+
+        <com.fabian.androidplayground.common.views.DynamicHeightImageView
+            android:id="@+id/mainListItemImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_width="400dp"
+            tools:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            app:picsum="@{mainListItemViewModel.pic}"
+            app:picsumSize="@{0.05}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
