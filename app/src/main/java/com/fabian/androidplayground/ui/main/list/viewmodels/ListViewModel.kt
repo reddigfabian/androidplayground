@@ -15,7 +15,7 @@ private const val TAG = "ListViewModel"
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : ViewModel(), LifecycleObserver {
+class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : ViewModel() {
 
     class Factory(private val loremPicsumRepository: LoremPicsumRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -35,7 +35,7 @@ class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : 
     ).flattenMerge(2).cachedIn(viewModelScope)
 
     init {
-//        refresh(false)
+        refresh(false)
     }
 
     fun getItemClickFlowLiveData() : LiveData<MutableSharedFlow<Picsum>> {
@@ -48,11 +48,6 @@ class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : 
 
     fun onSwipeRefresh() {
         refresh(true)
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onStart() {
-        refresh(false)
     }
 
     private fun refresh(isFromSwipe : Boolean) {

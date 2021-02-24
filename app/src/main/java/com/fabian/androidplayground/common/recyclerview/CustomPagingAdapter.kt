@@ -8,16 +8,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 
 abstract class ItemClickPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, BindingViewHolder>(diffCallback) {
 
-    interface PagingItemClickListener<T>{
-        fun onItemClick(item : T)
-    }
-
     val itemClickFlow = MutableSharedFlow<T>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-
-//    var listener : PagingItemClickListener<T>? = null
 
     protected fun onItemClick(item: T) {
         itemClickFlow.tryEmit(item)
-//        listener?.onItemClick(item)
     }
 }

@@ -34,7 +34,6 @@ class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragm
     override fun setDataBoundViewModels(binding: FragmentListBinding) {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.listViewModel = listViewModel
-        viewLifecycleOwner.lifecycle.addObserver(listViewModel)
     }
 
     private var job : Job? = null
