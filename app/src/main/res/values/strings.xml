@@ -11,4 +11,6 @@
     <string name="pause">Pause</string>
     <string name="play">Play</string>
     <string name="retry">Retry</string>
+    <string name="start">Start</string>
+    <string name="launch">Launch</string>
 </resources>

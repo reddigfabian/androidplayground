@@ -21,25 +21,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp">
-        <TextView
-            android:id="@+id/error_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+<!--        <TextView-->
+<!--            android:id="@+id/error_msg"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_horizontal"/>-->
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/progress_bar"
+            android:id="@+id/loadingAnimationView"
             android:layout_width="128dp"
             android:layout_height="96dp"
             android:layout_gravity="center"
-            app:lottie_rawRes="@raw/loading"
+            app:lottie_rawRes="@raw/loadingpulse"
             app:lottie_loop="true"
             app:lottie_autoPlay="true" />
-        <Button
-            android:id="@+id/retry_button"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/retry"/>
+<!--        <Button-->
+<!--            android:id="@+id/retry_button"-->
+<!--            style="@style/Widget.AppCompat.Button.Colored"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:text="@string/retry"/>-->
     </LinearLayout>
 </layout>

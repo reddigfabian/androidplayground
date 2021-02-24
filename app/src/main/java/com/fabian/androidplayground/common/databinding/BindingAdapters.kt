@@ -42,3 +42,24 @@ fun picsum(view : DynamicHeightImageView, pic : Picsum, sizePercent : Double = 0
         placeholder(ColorDrawable(Color.DKGRAY))
     }
 }
+
+//@BindingAdapter("onItemClick")
+//fun <T : Any> onItemClick(recycler : RecyclerView, clickFunction : (T) -> Unit) {
+//    val adapters = mutableListOf(recycler.adapter)
+//    if (recycler.adapter is ConcatAdapter) {
+//        adapters.clear()
+//        (recycler.adapter as? ConcatAdapter)?.adapters?.forEach { concatAdapter ->
+//            (concatAdapter as? CustomPagingAdapter<T>)?.let { customAdapter ->
+//                adapters.add(customAdapter)
+//            }
+//        }
+//    }
+//
+//    adapters.forEach {
+//        (it as? CustomPagingAdapter<T>)?.listener = object : CustomPagingAdapter.PagingItemClickListener<T> {
+//            override fun onItemClick(item: T) {
+//                clickFunction.invoke(item)
+//            }
+//        }
+//    }
+//}

@@ -3,7 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/MainListFragment">
+    app:startDestination="@id/MainLaunchFragment">
+
+    <fragment
+        android:id="@+id/MainLaunchFragment"
+        android:name="com.fabian.androidplayground.ui.main.launch.views.LaunchFragment"
+        tools:layout="@layout/fragment_launch">
+        <action
+            android:id="@+id/action_launch_to_list"
+            app:destination="@id/MainListFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/MainListFragment"
@@ -18,27 +27,9 @@
         android:id="@+id/MainDetailFragment"
         android:name="com.fabian.androidplayground.ui.main.detail.views.DetailFragment"
         tools:layout="@layout/fragment_detail">
-        <action
-            android:id="@+id/action_detail_to_audio"
-            app:destination="@id/MainAudioFragment"/>
-        <action
-            android:id="@+id/action_detail_to_help"
-            app:destination="@id/MainHelpFragment"/>
         <argument
             android:name="picsum"
             app:argType="com.fabian.androidplayground.api.picsum.Picsum"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/MainAudioFragment"
-        android:name="com.fabian.androidplayground.ui.main.audio.views.AudioFragment"
-        tools:layout="@layout/fragment_audio">
-    </fragment>
-
-    <fragment
-        android:id="@+id/MainHelpFragment"
-        android:name="com.fabian.androidplayground.ui.main.help.views.HelpFragment"
-        tools:layout="@layout/fragment_help">
     </fragment>
 
 </navigation>

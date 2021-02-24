@@ -5,9 +5,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import com.fabian.androidplayground.R
+import com.fabian.androidplayground.api.picsum.LoremPicsumRepository
 import com.fabian.androidplayground.common.databinding.BaseDataBindingActivity
 import com.fabian.androidplayground.databinding.ActivityMainBinding
-import com.fabian.androidplayground.ui.main.detail.viewmodels.DetailViewModel
+import com.fabian.androidplayground.ui.main.launch.viewmodels.LaunchViewModel
 import com.fabian.androidplayground.ui.main.list.viewmodels.ListViewModel
 import com.fabian.androidplayground.ui.main.viewmodels.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,8 +25,10 @@ private const val TAG = "MainActivity"
 class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private val mainViewModel : MainViewModel by viewModels()
-    private val listViewModel : ListViewModel by viewModels()
-    private val detailVieWModel : DetailViewModel by viewModels()
+    private val launchViewModel : LaunchViewModel by viewModels()
+    private val listViewModel : ListViewModel by viewModels { ListViewModel.Factory(LoremPicsumRepository) }
+    private val detailVieWModel : LaunchViewModel by viewModels()
+
     private lateinit var navController : NavController
 
     override fun onStart() {
@@ -41,6 +44,14 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
             supportActionBar?.title = getString(titleResID)
         }
 
+        listViewModel.getItemClickFlowLiveData().observe(this) {
+            lifecycleScope.launch{
+                it.collectLatest {
+                    mainViewModel.onListItemSelected(it)
+                }
+            }
+        }
+
         lifecycleScope.launch {
             mainViewModel.mainStateAsFlow().collectLatest { mainState ->
                 if (mainState.viewState.destinationId != navController.graph.startDestination) {
@@ -53,16 +64,11 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
 
         lifecycleScope.launch {
             val viewModelClickEventFlows = listOf(
-                detailVieWModel.getClickEventFlow()
+                    launchViewModel.getClickEventFlow(),
+                    detailVieWModel.getClickEventFlow()
             )
             viewModelClickEventFlows.merge().collect {
                 mainViewModel.onClick(it)
-            }
-        }
-
-        lifecycleScope.launch {
-            listViewModel.getItemSelectedFlow().collectLatest {
-                mainViewModel.onListItemSelected(it)
             }
         }
     }

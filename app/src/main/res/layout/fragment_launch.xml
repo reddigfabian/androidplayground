@@ -5,24 +5,25 @@
 
     <data>
         <variable
-            name="helpViewModel"
-            type="com.fabian.androidplayground.ui.main.help.viewmodels.HelpViewModel" />
+            name="launchVieWModel"
+            type="com.fabian.androidplayground.ui.main.launch.viewmodels.LaunchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.list.views.AudioFragment">
+        tools:context=".ui.main.detail.views.LaunchFragment">
 
-        <TextView
-            android:id="@+id/confirmButton"
+        <Button
+            android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/help"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:text="@string/start"
+            android:onClick="@{launchVieWModel::onClick}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

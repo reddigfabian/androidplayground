@@ -1,30 +1,29 @@
 package com.fabian.androidplayground.ui.main.list.viewmodels
 
-import android.view.View
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.fabian.androidplayground.api.picsum.LoremPicsumRepository
 import com.fabian.androidplayground.api.picsum.Picsum
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 
+private const val TAG = "ListViewModel"
+
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : ViewModel() {
+class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : ViewModel(), LifecycleObserver {
+
     class Factory(private val loremPicsumRepository: LoremPicsumRepository) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return ListViewModel(loremPicsumRepository) as T
         }
     }
 
-    private val selectedChannel = Channel<Pair<View, Picsum>>(Channel.CONFLATED)
-
+    private val itemClickFlow = MutableLiveData<MutableSharedFlow<Picsum>>()
     val swipeRefreshing = MutableLiveData(false)
 
     private val clearListCh = Channel<Unit>(Channel.CONFLATED)
@@ -36,11 +35,24 @@ class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : 
     ).flattenMerge(2).cachedIn(viewModelScope)
 
     init {
-        refresh(false)
+//        refresh(false)
+    }
+
+    fun getItemClickFlowLiveData() : LiveData<MutableSharedFlow<Picsum>> {
+        return itemClickFlow
+    }
+
+    fun setItemClickFlow(flow : MutableSharedFlow<Picsum>) {
+        itemClickFlow.value = flow
     }
 
     fun onSwipeRefresh() {
         refresh(true)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onStart() {
+        refresh(false)
     }
 
     private fun refresh(isFromSwipe : Boolean) {
@@ -49,13 +61,5 @@ class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : 
             clearListCh.offer(Unit)
         }
         refreshCh.offer(Unit)
-    }
-
-    fun getItemSelectedFlow() : Flow<Pair<View, Picsum>> {
-        return selectedChannel.receiveAsFlow()
-    }
-
-    fun onItemClick(item: Pair<View, Picsum>) {
-        selectedChannel.offer(item)
     }
 }

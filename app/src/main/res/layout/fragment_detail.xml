@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.detail.views.DetailFragment">
+        tools:context=".ui.main.detail.views.LaunchFragment">
 
         <com.fabian.androidplayground.common.views.DynamicHeightImageView
             android:id="@+id/detailImage"
