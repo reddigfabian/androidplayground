@@ -25,7 +25,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
             app:picsum="@{mainListItemViewModel.pic}"
-            app:picsumSize="@{0.05}"/>
+            app:picsumSize="@{0.05}"
+            android:foreground="?attr/selectableItemBackground"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -4,20 +4,26 @@ import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlin.random.Random
 
 private const val TAG = "LoremPicsumPagingSource"
 private const val PICSUM_STARTING_PAGE = 0
 
-class LoremPicsumPagingSource() : PagingSource<Int, Picsum>()  {
+class LoremPicsumPagingSource : PagingSource<Int, Picsum>()  {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Picsum> {
         return try {
             val page = if (params is LoadParams.Append) params.key else PICSUM_STARTING_PAGE
             val limit = params.loadSize
-            val picsumResponse = LoremPicsumApi.loremPicsumService.imageListAsync(limit = limit, page = page).await()
+            val r = Random.nextInt(10)
+            val picsumResponse = if (r < 3) {
+                listOf()
+            } else {
+                LoremPicsumApi.loremPicsumService.imageListAsync(limit = limit, page = page).await()
+            }
             val nextKey = if (picsumResponse.isEmpty()) {
                 null
             } else {
-                page + (params.loadSize / PAGE_SIZE)
+                page + (params.loadSize / 50)
             }
 
             LoadResult.Page(

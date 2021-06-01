@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.fabian.androidplayground.common.recyclerview.views.NetworkStateItemViewHolder
 import com.fabian.androidplayground.ui.main.list.MainListAdapter
 
 class LoadStateAdapter(private val adapter: MainListAdapter // TODO: 2/19/21 Make generic

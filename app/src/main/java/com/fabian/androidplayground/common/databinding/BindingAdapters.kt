@@ -3,6 +3,7 @@ package com.fabian.androidplayground.common.databinding
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.view.View
 import androidx.databinding.BindingAdapter
 import coil.load
 import com.airbnb.lottie.LottieAnimationView
@@ -40,6 +41,15 @@ fun picsum(view : DynamicHeightImageView, pic : Picsum, sizePercent : Double = 0
     view.load(newUri) {
         crossfade(true)
         placeholder(ColorDrawable(Color.DKGRAY))
+    }
+}
+
+@BindingAdapter("isVisibleGone")
+fun isVisibleGone(view : View, visible : Boolean) {
+    if (visible) {
+        view.visibility = View.VISIBLE
+    } else {
+        view.visibility = View.GONE
     }
 }
 

@@ -2,9 +2,7 @@ package com.fabian.androidplayground.ui.main.list.views
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,15 +11,15 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.api.picsum.LoremPicsumRepository
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
 import com.fabian.androidplayground.common.recyclerview.LoadStateAdapter
 import com.fabian.androidplayground.common.utils.UIUtils
 import com.fabian.androidplayground.databinding.FragmentListBinding
 import com.fabian.androidplayground.ui.main.list.MainListAdapter
 import com.fabian.androidplayground.ui.main.list.viewmodels.ListViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.launch
 
 private const val TAG = "ListFragment"
 
@@ -29,18 +27,16 @@ private const val TAG = "ListFragment"
 @ExperimentalCoroutinesApi
 class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragment_list) {
 
-    private val listViewModel : ListViewModel by activityViewModels { ListViewModel.Factory(LoremPicsumRepository) }
+    private val listViewModel : ListViewModel by activityViewModels { ListViewModel.Factory() }
+    private val mainListAdapter = MainListAdapter()
 
     override fun setDataBoundViewModels(binding: FragmentListBinding) {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.listViewModel = listViewModel
     }
 
-    private var job : Job? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val mainListAdapter = MainListAdapter()
-        listViewModel.setItemClickFlow(mainListAdapter.itemClickFlow)
+        mainListAdapter.addItemClickListener(listViewModel)
 
         context?.let { nonNullContext ->
             val gradientDrawable = GradientDrawable()
@@ -59,35 +55,27 @@ class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragm
         val refreshStateAdapter = LoadStateAdapter(mainListAdapter)
         mainListAdapter.addLoadStateListener {
             val refresh = it.refresh
-//            if (listViewModel.swipeRefreshing.value != true) {
-//                refreshStateAdapter.loadState = refresh
-//            } else {
-//                if (refresh is LoadState.NotLoading) {
-//                    listViewModel.swipeRefreshing.value = false
-//                }
-//            }
-            Log.d(TAG, "onViewCreated: $it")
-
-            when (refresh) {
-                is LoadState.NotLoading -> {
-                    binding.loadingAnimationView.visibility = View.GONE
+            if (listViewModel.swipeRefreshing.value != true) {
+                refreshStateAdapter.loadState = refresh
+            } else {
+                if (refresh is LoadState.NotLoading) {
+                    listViewModel.swipeRefreshing.value = false
                 }
-                is LoadState.Loading -> {
-                    binding.loadingAnimationView.visibility = View.VISIBLE
-                }
-                is LoadState.Error -> {}
             }
+            listViewModel.isEmpty.postValue(refresh is LoadState.NotLoading && it.append.endOfPaginationReached && mainListAdapter.itemCount == 0)
         }
         val withLoadStateFooter = mainListAdapter.withLoadStateFooter(LoadStateAdapter(mainListAdapter))
         withLoadStateFooter.addAdapter(0, refreshStateAdapter)
 
+        listViewModel.swipeRefreshing.observe(viewLifecycleOwner) {
+            mainListAdapter.refresh()
+        }
+
         binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
         binding.mainListRecycler.adapter = mainListAdapter
-        job?.cancel()
-        job = lifecycleScope.async {
-            listViewModel.images.collectLatest {
-                listViewModel.swipeRefreshing.postValue(false)
-                mainListAdapter.submitData(it)
+        listViewModel.pagingDataViewStates.observe(viewLifecycleOwner) { pagingData ->
+            lifecycleScope.launch {
+                mainListAdapter.submitData(pagingData)
             }
         }
     }

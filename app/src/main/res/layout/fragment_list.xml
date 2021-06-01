@@ -29,19 +29,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/mainListRecycler"
-                android:orientation="vertical"/>
+                android:orientation="vertical"
+                app:isVisibleGone="@{!listViewModel.isEmpty()}"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/loadingAnimationView"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Empty State"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/loadingpulse"/>
+            app:isVisibleGone="@{listViewModel.isEmpty()}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

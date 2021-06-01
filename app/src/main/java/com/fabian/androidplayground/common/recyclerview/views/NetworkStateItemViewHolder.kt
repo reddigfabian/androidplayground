@@ -1,4 +1,4 @@
-package com.fabian.androidplayground.common.recyclerview
+package com.fabian.androidplayground.common.recyclerview.views
 
 import android.animation.Animator
 import android.view.LayoutInflater
@@ -17,11 +17,11 @@ class NetworkStateItemViewHolder(
 ) {
     private val binding = ItemNetworkStateBinding.bind(itemView)
     private val loadingAnimationView = binding.loadingAnimationView
-//    private val errorMsg = binding.errorMsg
-//    private val retry = binding.retryButton
-//            .also {
-//                it.setOnClickListener { retryCallback() }
-//            }
+    private val errorMsg = binding.errorMsg
+    private val retry = binding.retryButton
+            .also {
+                it.setOnClickListener { retryCallback() }
+            }
 
     fun bindTo(loadState: LoadState) {
         when (loadState) {
@@ -49,9 +49,9 @@ class NetworkStateItemViewHolder(
             else -> {
             }
         }
-//        loadingAnimationView.isVisible = loadState is LoadState.Loading
-//        retry.isVisible = loadState is LoadState.Error
-//        errorMsg.isVisible = !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()
-//        errorMsg.text = (loadState as? LoadState.Error)?.error?.message
+        loadingAnimationView.isVisible = loadState is LoadState.Loading
+        retry.isVisible = loadState is LoadState.Error
+        errorMsg.isVisible = !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()
+        errorMsg.text = (loadState as? LoadState.Error)?.error?.message
     }
 }

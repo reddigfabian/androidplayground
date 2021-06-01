@@ -1,4 +1,4 @@
-package com.fabian.androidplayground.common.databinding
+package com.fabian.androidplayground.common.recyclerview.views
 
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView

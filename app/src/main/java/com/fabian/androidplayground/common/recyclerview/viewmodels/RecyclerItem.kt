@@ -1,4 +1,4 @@
-package com.fabian.androidplayground.common.recyclerview
+package com.fabian.androidplayground.common.recyclerview.viewmodels
 
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding

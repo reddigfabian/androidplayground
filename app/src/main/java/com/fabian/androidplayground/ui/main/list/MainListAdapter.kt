@@ -7,7 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.Picsum
-import com.fabian.androidplayground.common.databinding.BindingViewHolder
+import com.fabian.androidplayground.common.recyclerview.views.BindingViewHolder
 import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
 import com.fabian.androidplayground.databinding.ItemMainListBinding
 import com.fabian.androidplayground.ui.main.list.viewmodels.MainListItemViewModel
@@ -27,7 +27,8 @@ class MainListAdapter : ItemClickPagingAdapter<Picsum>(ITEM_COMPARATOR) {
         getItem(position)?.let { picsum ->
             (holder.binding as ItemMainListBinding).mainListItemRoot.transitionName = "transition$position"
             MainListItemViewModel(picsum).toRecyclerItem().bind(holder.binding)
-            holder.binding.mainListItemRoot.setOnClickListener { onItemClick(picsum) }
+            holder.binding.mainListItemRoot.setOnClickListener { notifyListenersOfClick(picsum) }
+            holder.binding.mainListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(picsum) }
             holder.binding.executePendingBindings()
         }
     }
@@ -41,5 +42,4 @@ class MainListAdapter : ItemClickPagingAdapter<Picsum>(ITEM_COMPARATOR) {
                     oldItem.id == newItem.id
         }
     }
-
 }

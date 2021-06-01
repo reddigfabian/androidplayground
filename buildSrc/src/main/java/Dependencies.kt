@@ -15,7 +15,7 @@ object Versions {
 
     //AndroidX
     const val appCompat = "1.2.0"
-    const val paging = "3.0.0-beta01"
+    const val paging = "3.0.0"
     const val navVersion = "2.3.3"
 
     //Design/UI

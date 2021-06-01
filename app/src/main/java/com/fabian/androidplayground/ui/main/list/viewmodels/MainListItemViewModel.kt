@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.fabian.androidplayground.BR
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.Picsum
-import com.fabian.androidplayground.common.recyclerview.RecyclerItem
+import com.fabian.androidplayground.common.recyclerview.viewmodels.RecyclerItem
 
 class MainListItemViewModel(val pic: Picsum) : ViewModel() {
         val testOne : (View)-> Unit = { view ->

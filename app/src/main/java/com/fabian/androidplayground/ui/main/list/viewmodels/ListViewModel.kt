@@ -1,60 +1,56 @@
 package com.fabian.androidplayground.ui.main.list.viewmodels
 
 import androidx.lifecycle.*
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.fabian.androidplayground.api.picsum.LoremPicsumRepository
+import androidx.paging.*
+import com.fabian.androidplayground.api.picsum.LoremPicsumPagingSource
 import com.fabian.androidplayground.api.picsum.Picsum
+import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
 
 private const val TAG = "ListViewModel"
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ListViewModel(private val loremPicsumRepository: LoremPicsumRepository) : ViewModel() {
+class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Picsum> {
 
-    class Factory(private val loremPicsumRepository: LoremPicsumRepository) : ViewModelProvider.Factory {
+    companion object {
+        private const val PAGE_SIZE = 50
+    }
+
+    class Factory : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return ListViewModel(loremPicsumRepository) as T
+            return ListViewModel() as T
         }
     }
 
-    private val itemClickFlow = MutableLiveData<MutableSharedFlow<Picsum>>()
+    val isEmpty = MutableLiveData(false)
+
+    private val mutablePicsumClickLiveData = MutableLiveData<Picsum>()
+    val picsumClickLiveData : LiveData<Picsum> = mutablePicsumClickLiveData
+
+    private val _pagingDataViewStates =
+        Pager(PagingConfig(PAGE_SIZE, PAGE_SIZE * 3)) { LoremPicsumPagingSource() }.flow
+            .cachedIn(viewModelScope)
+            .asLiveData()
+            .let { it as MutableLiveData<PagingData<Picsum>> }
+
+    val pagingDataViewStates: LiveData<PagingData<Picsum>> = _pagingDataViewStates
+
     val swipeRefreshing = MutableLiveData(false)
 
-    private val clearListCh = Channel<Unit>(Channel.CONFLATED)
-    private val refreshCh = Channel<Unit>(Channel.CONFLATED)
-
-    val images = flowOf(
-        clearListCh.receiveAsFlow().map { PagingData.empty() },
-        refreshCh.receiveAsFlow().flatMapLatest { loremPicsumRepository.imageList() }
-    ).flattenMerge(2).cachedIn(viewModelScope)
-
-    init {
-        refresh(false)
-    }
-
-    fun getItemClickFlowLiveData() : LiveData<MutableSharedFlow<Picsum>> {
-        return itemClickFlow
-    }
-
-    fun setItemClickFlow(flow : MutableSharedFlow<Picsum>) {
-        itemClickFlow.value = flow
-    }
-
     fun onSwipeRefresh() {
-        refresh(true)
+        swipeRefreshing.value = true
     }
 
-    private fun refresh(isFromSwipe : Boolean) {
-        swipeRefreshing.value = isFromSwipe
-        if (isFromSwipe) {
-            clearListCh.offer(Unit)
+    override fun onItemClick(item: Picsum) {
+        mutablePicsumClickLiveData.value = item
+    }
+
+    override fun onItemLongClick(item: Picsum) {
+        val t = pagingDataViewStates.value
+        _pagingDataViewStates.value = t!!.filter {
+            false //for testing purposes, just filter EVERYTHING to pretend like the user deleted the last item
         }
-        refreshCh.offer(Unit)
     }
 }

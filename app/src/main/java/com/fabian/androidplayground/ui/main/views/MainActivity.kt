@@ -5,7 +5,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.api.picsum.LoremPicsumRepository
 import com.fabian.androidplayground.common.databinding.BaseDataBindingActivity
 import com.fabian.androidplayground.databinding.ActivityMainBinding
 import com.fabian.androidplayground.ui.main.launch.viewmodels.LaunchViewModel
@@ -26,7 +25,7 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
 
     private val mainViewModel : MainViewModel by viewModels()
     private val launchViewModel : LaunchViewModel by viewModels()
-    private val listViewModel : ListViewModel by viewModels { ListViewModel.Factory(LoremPicsumRepository) }
+    private val listViewModel : ListViewModel by viewModels { ListViewModel.Factory() }
     private val detailVieWModel : LaunchViewModel by viewModels()
 
     private lateinit var navController : NavController
@@ -44,12 +43,8 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
             supportActionBar?.title = getString(titleResID)
         }
 
-        listViewModel.getItemClickFlowLiveData().observe(this) {
-            lifecycleScope.launch{
-                it.collectLatest {
-                    mainViewModel.onListItemSelected(it)
-                }
-            }
+        listViewModel.picsumClickLiveData.observe(this) {
+            mainViewModel.onListItemSelected(it)
         }
 
         lifecycleScope.launch {
@@ -64,8 +59,8 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
 
         lifecycleScope.launch {
             val viewModelClickEventFlows = listOf(
-                    launchViewModel.getClickEventFlow(),
-                    detailVieWModel.getClickEventFlow()
+                launchViewModel.getClickEventFlow(),
+                detailVieWModel.getClickEventFlow()
             )
             viewModelClickEventFlows.merge().collect {
                 mainViewModel.onClick(it)
