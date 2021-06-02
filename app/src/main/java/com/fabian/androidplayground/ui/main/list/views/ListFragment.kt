@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,7 +18,6 @@ import com.fabian.androidplayground.ui.main.list.MainListAdapter
 import com.fabian.androidplayground.ui.main.list.viewmodels.ListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.launch
 
 private const val TAG = "ListFragment"
 
@@ -62,7 +60,7 @@ class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragm
                     listViewModel.swipeRefreshing.value = false
                 }
             }
-            listViewModel.isEmpty.postValue(refresh is LoadState.NotLoading && it.append.endOfPaginationReached && mainListAdapter.itemCount == 0)
+            listViewModel.isEmpty.value = (refresh is LoadState.NotLoading && it.append.endOfPaginationReached && mainListAdapter.itemCount == 0)
         }
         val withLoadStateFooter = mainListAdapter.withLoadStateFooter(LoadStateAdapter(mainListAdapter))
         withLoadStateFooter.addAdapter(0, refreshStateAdapter)
@@ -74,9 +72,7 @@ class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragm
         binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
         binding.mainListRecycler.adapter = mainListAdapter
         listViewModel.pagingDataViewStates.observe(viewLifecycleOwner) { pagingData ->
-            lifecycleScope.launch {
-                mainListAdapter.submitData(pagingData)
-            }
+            mainListAdapter.submitData(lifecycle, pagingData)
         }
     }
 }
