@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/mainListRecycler"
                 android:orientation="vertical"
-                app:isVisibleGone="@{!listViewModel.isEmpty()}"/>
+                app:isVisibleGone="@{!listViewModel.isEmptyLiveData()}"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -45,7 +45,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:isVisibleGone="@{listViewModel.isEmpty()}"/>
+            app:isVisibleGone="@{listViewModel.isEmptyLiveData()}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
