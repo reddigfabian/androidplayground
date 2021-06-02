@@ -29,7 +29,7 @@ class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Pics
         }
     }
 
-    val filterItems = MutableStateFlow(mutableListOf<Picsum>())
+    private val filterItems = MutableStateFlow(mutableListOf<Picsum>())
     val isEmptyLiveData = MutableLiveData(true)
 
     private val mutablePicsumClickLiveData = MutableLiveData<Picsum>()

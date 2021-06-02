@@ -78,7 +78,5 @@ class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragm
                 mainListAdapter.submitData(pagingData)
             }
         }
-
-        listViewModel.pagingDataViewStates
     }
 }
