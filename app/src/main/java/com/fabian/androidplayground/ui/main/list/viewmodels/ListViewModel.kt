@@ -20,7 +20,7 @@ private const val TAG = "ListViewModel"
 class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Picsum> {
 
     companion object {
-        private const val PAGE_SIZE = 1
+        private const val PAGE_SIZE = 10
     }
 
     class Factory : ViewModelProvider.Factory {
@@ -35,8 +35,12 @@ class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Pics
     private val mutablePicsumClickLiveData = MutableLiveData<Picsum>()
     val picsumClickLiveData : LiveData<Picsum> = mutablePicsumClickLiveData
 
-    private val _pagingDataViewStates =
-        Pager(PagingConfig(PAGE_SIZE, 0)) { LoremPicsumPagingSource() }.flow
+    val pagingSourceFactory = InvalidatingPagingSourceFactory<Int, Picsum> {
+        LoremPicsumPagingSource()
+    }
+
+    val pagingData =
+        Pager(config = PagingConfig(PAGE_SIZE, PAGE_SIZE*3), pagingSourceFactory = pagingSourceFactory).flow
             .cachedIn(viewModelScope)
             .combine(filterItems) { pagingData, filteredItems ->
                 pagingData.filter {
@@ -45,12 +49,12 @@ class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Pics
             }
             .asLiveData()
 
-    val pagingDataViewStates: LiveData<PagingData<Picsum>> = _pagingDataViewStates
 
     val swipeRefreshing = MutableLiveData(false)
 
     fun onSwipeRefresh() {
         swipeRefreshing.value = true
+        filterItems.value.clear()
     }
 
     override fun onItemClick(item: Picsum) {

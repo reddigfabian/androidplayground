@@ -23,7 +23,7 @@ class LoremPicsumPagingSource : PagingSource<Int, Picsum>()  {
             val nextKey = if (picsumResponse.isEmpty()) {
                 null
             } else {
-                page + (params.loadSize / 1)
+                page + (params.loadSize / 10)
             }
 
             LoadResult.Page(
