@@ -5,19 +5,16 @@ import androidx.paging.*
 import com.fabian.androidplayground.api.picsum.LoremPicsumPagingSource
 import com.fabian.androidplayground.api.picsum.Picsum
 import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
-import com.fabian.androidplayground.ui.main.list.MainListAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.map
-
-private const val TAG = "ListViewModel"
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.transformLatest
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Picsum> {
+class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<MainListItemViewModel> {
 
     companion object {
         private const val PAGE_SIZE = 10
@@ -30,24 +27,30 @@ class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Pics
     }
 
     private val filterItems = MutableStateFlow(mutableListOf<Picsum>())
-    val isEmptyLiveData = MutableLiveData(true)
+    val isEmptyLiveData = MutableLiveData(false)
 
     private val mutablePicsumClickLiveData = MutableLiveData<Picsum>()
     val picsumClickLiveData : LiveData<Picsum> = mutablePicsumClickLiveData
 
-    val pagingSourceFactory = InvalidatingPagingSourceFactory<Int, Picsum> {
-        LoremPicsumPagingSource()
+    var pagingSource : PagingSource<Int, Picsum>? = null
+
+    val pagingSourceFactory = InvalidatingPagingSourceFactory {
+        LoremPicsumPagingSource().also { pagingSource = it }
     }
 
-    val pagingData =
-        Pager(config = PagingConfig(PAGE_SIZE, PAGE_SIZE*3), pagingSourceFactory = pagingSourceFactory).flow
-            .cachedIn(viewModelScope)
-            .combine(filterItems) { pagingData, filteredItems ->
-                pagingData.filter {
-                    !filteredItems.contains(it)
-                }
+    val clearStateFlow = MutableStateFlow(false)
+
+    val pagingData = clearStateFlow.transformLatest {
+        emit(PagingData.empty())
+        emitAll(Pager(config = PagingConfig(PAGE_SIZE, PAGE_SIZE*3), pagingSourceFactory = pagingSourceFactory).flow)
+    }
+        .cachedIn(viewModelScope)
+        .combine(filterItems) { pagingData, filteredItems ->
+            pagingData.filter {
+                !filteredItems.contains(it)
             }
-            .asLiveData()
+        }
+        .asLiveData()
 
 
     val swipeRefreshing = MutableLiveData(false)
@@ -57,13 +60,13 @@ class ListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<Pics
         filterItems.value.clear()
     }
 
-    override fun onItemClick(item: Picsum) {
-        mutablePicsumClickLiveData.value = item
+    override fun onItemClick(item: MainListItemViewModel) {
+        mutablePicsumClickLiveData.value = item.pic
     }
 
-    override fun onItemLongClick(item: Picsum) {
+    override fun onItemLongClick(item: MainListItemViewModel) {
         val r = filterItems.value.toMutableList()
-        r.add(item)
+        r.add(item.pic)
         filterItems.value = r
     }
 }

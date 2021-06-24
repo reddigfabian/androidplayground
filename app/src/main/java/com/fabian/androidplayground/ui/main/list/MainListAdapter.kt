@@ -4,6 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
+import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.Picsum
@@ -15,7 +18,15 @@ import com.fabian.androidplayground.ui.main.list.viewmodels.toRecyclerItem
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
-class MainListAdapter : ItemClickPagingAdapter<Picsum>(ITEM_COMPARATOR) {
+class MainListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<MainListItemViewModel>(ITEM_COMPARATOR) {
+
+    fun setData(pagingData: PagingData<Picsum>) {
+        submitData(lifecycleOwner.lifecycle, pagingData
+            .map { picsum ->
+                MainListItemViewModel(picsum)
+            }
+        )
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -24,22 +35,22 @@ class MainListAdapter : ItemClickPagingAdapter<Picsum>(ITEM_COMPARATOR) {
     }
 
     override fun onBindViewHolder(holder: BindingViewHolder, position: Int) {
-        getItem(position)?.let { picsum ->
+        getItem(position)?.let { item ->
             (holder.binding as ItemMainListBinding).mainListItemRoot.transitionName = "transition$position"
-            MainListItemViewModel(picsum).toRecyclerItem().bind(holder.binding)
-            holder.binding.mainListItemRoot.setOnClickListener { notifyListenersOfClick(picsum) }
-            holder.binding.mainListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(picsum) }
+            item.toRecyclerItem().bind(holder.binding)
+            holder.binding.mainListItemRoot.setOnClickListener { notifyListenersOfClick(item) }
+            holder.binding.mainListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(item) }
             holder.binding.executePendingBindings()
         }
     }
 
     companion object {
-        val ITEM_COMPARATOR = object : DiffUtil.ItemCallback<Picsum>() {
-            override fun areContentsTheSame(oldItem: Picsum, newItem: Picsum): Boolean =
-                    oldItem == newItem
+        val ITEM_COMPARATOR = object : DiffUtil.ItemCallback<MainListItemViewModel>() {
+            override fun areContentsTheSame(oldItem: MainListItemViewModel, newItem: MainListItemViewModel): Boolean =
+                    oldItem.pic == newItem.pic
 
-            override fun areItemsTheSame(oldItem: Picsum, newItem: Picsum): Boolean =
-                    oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: MainListItemViewModel, newItem: MainListItemViewModel): Boolean =
+                    oldItem == newItem
         }
     }
 }

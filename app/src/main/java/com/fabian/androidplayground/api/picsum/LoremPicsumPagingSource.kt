@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 private const val TAG = "LoremPicsumPagingSource"
@@ -18,7 +19,8 @@ class LoremPicsumPagingSource : PagingSource<Int, Picsum>()  {
 //            val picsumResponse = if (r < 3) {
 //                listOf()
 //            } else {
-            val picsumResponse =LoremPicsumApi.loremPicsumService.imageListAsync(limit = limit, page = page).await()
+            delay(2000) //fake loading time
+            val picsumResponse = LoremPicsumApi.loremPicsumService.imageListAsync(limit = limit, page = page).await()
 //            }
             val nextKey = if (picsumResponse.isEmpty()) {
                 null
