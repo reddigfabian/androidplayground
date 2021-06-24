@@ -7,32 +7,32 @@ object Versions {
     //IDE
     const val gradleVersionsPlugin = "0.36.0"
     const val kotlin = "1.4.30"
-    const val gradlePlugin = "4.1.2"
+    const val gradlePlugin = "4.2.1"
 
     //App
     //Kotlin
-    const val androidCoreKtx = "1.3.2"
+    const val androidCoreKtx = "1.5.0"
 
     //AndroidX
-    const val appCompat = "1.2.0"
+    const val appCompat = "1.3.0"
     const val paging = "3.0.0"
-    const val navVersion = "2.3.3"
+    const val navVersion = "2.3.5"
 
     //Design/UI
     const val material = "1.3.0"
-    const val lottie = "3.6.1"
+    const val lottie = "3.7.0"
 //    const val glide = "4.12.0"
-    const val coil = "1.1.1"
+    const val coil = "1.2.2"
     const val swipeRefreshLayout = "1.2.0-alpha01"
 
     //Networking
     const val retrofit = "2.9.0"
-    const val moshi = "1.11.0"
+    const val moshi = "1.12.0"
     const val retrofitCoroutines = "0.9.2"
     const val retrofitLogInterceptor = "4.2.1"
 
     //LeakCanary
-    const val leakCanary = "2.6"
+    const val leakCanary = "2.7"
 
     //Test
     const val jUnit = "4.13.2"
