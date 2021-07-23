@@ -3,7 +3,6 @@ import java.util.*
 //This implementation based on this article: https://medium.com/doubletapp/how-to-manage-gradle-dependencies-in-the-android-project-proper-way-dad51fd4fe7
 object Versions {
 
-
     //IDE
     const val gradleVersionsPlugin = "0.36.0"
     const val kotlin = "1.4.30"
@@ -14,6 +13,7 @@ object Versions {
     const val androidCoreKtx = "1.5.0"
 
     //AndroidX
+    const val androidLifeCycleRuntimeKtx = "2.4.0-alpha02"
     const val appCompat = "1.3.0"
     const val paging = "3.0.0"
     const val navVersion = "2.3.5"
@@ -30,6 +30,7 @@ object Versions {
     const val moshi = "1.12.0"
     const val retrofitCoroutines = "0.9.2"
     const val retrofitLogInterceptor = "4.2.1"
+    const val scarlet = "0.1.12"
 
     //LeakCanary
     const val leakCanary = "2.7"
@@ -73,6 +74,11 @@ object Dependencies {
     const val moshiKapt = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
     const val retrofitCoroutines = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Versions.retrofitCoroutines}"
     const val retrofitLogInterceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.retrofitLogInterceptor}"
+    const val scarlet = "com.tinder.scarlet:scarlet:${Versions.scarlet}"
+    const val scarletMoshi = "com.tinder.scarlet:message-adapter-moshi:${Versions.scarlet}"
+    const val scarletOkHttpWebsocket = "com.tinder.scarlet:websocket-okhttp:${Versions.scarlet}"
+    const val scarletLifeCycle = "com.tinder.scarlet:lifecycle-android:${Versions.scarlet}"
+    const val scarletCoroutines = "com.tinder.scarlet:stream-adapter-coroutines:${Versions.scarlet}"
 
     //LeakCanary
     const val leakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"

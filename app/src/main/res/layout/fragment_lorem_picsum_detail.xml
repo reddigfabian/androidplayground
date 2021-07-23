@@ -5,14 +5,14 @@
 
     <data>
         <variable
-            name="detailViewModel"
-            type="com.fabian.androidplayground.ui.main.detail.viewmodels.DetailViewModel" />
+            name="loremPicsumDetailViewModel"
+            type="com.fabian.androidplayground.ui.main.picsum.detail.viewmodels.LoremPicsumDetailViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.detail.views.LaunchFragment">
+        tools:context=".ui.main.picsum.detail.views.LaunchFragment">
 
         <com.fabian.androidplayground.common.views.DynamicHeightImageView
             android:id="@+id/detailImage"
@@ -22,7 +22,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
-            app:picsum="@{detailViewModel.pic}"
+            app:picsum="@{loremPicsumDetailViewModel.pic}"
             app:picsumSize="@{0.5}"
             android:transitionName="listToDetailImage"/>
 

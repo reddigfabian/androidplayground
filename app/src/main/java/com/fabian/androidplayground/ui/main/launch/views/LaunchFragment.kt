@@ -1,20 +1,25 @@
 package com.fabian.androidplayground.ui.main.launch.views
 
-import android.os.Bundle
-import android.text.Html
-import android.view.View
-import android.widget.TextView
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
+import com.fabian.androidplayground.common.state.StateFragment
 import com.fabian.androidplayground.databinding.FragmentLaunchBinding
 import com.fabian.androidplayground.ui.main.launch.viewmodels.LaunchViewModel
-import kotlinx.android.synthetic.main.fragment_launch.*
+import com.fabian.androidplayground.ui.main.state.MainState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 
-class LaunchFragment : BaseDataBindingFragment<FragmentLaunchBinding>(R.layout.fragment_launch) {
-    private val launchViewModel : LaunchViewModel by activityViewModels()
+@FlowPreview
+@ExperimentalCoroutinesApi
+class LaunchFragment : StateFragment<MainState, FragmentLaunchBinding>(R.layout.fragment_launch) {
+    private val launchViewModel : LaunchViewModel by viewModels()
 
     override fun setDataBoundViewModels(binding: FragmentLaunchBinding) {
-        binding.launchVieWModel = launchViewModel
+        binding.launchViewModel = launchViewModel
     }
+
+    override fun getCurrentState() = launchViewModel.getState<MainState>()
+    override fun getStateFlow() = launchViewModel.getStateAsFlow<MainState>()
+    override fun onBackPressed() = launchViewModel.onBackPressed()
 }

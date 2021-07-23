@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="mainListItemViewModel"
-            type="com.fabian.androidplayground.ui.main.list.viewmodels.MainListItemViewModel" />
+            name="loremPicsumItemViewModel"
+            type="com.fabian.androidplayground.ui.main.picsum.list.viewmodels.LoremPicsumItemViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
-            app:picsum="@{mainListItemViewModel.pic}"
+            app:picsum="@{loremPicsumItemViewModel.pic}"
             app:picsumSize="@{0.05}"
             android:foreground="?attr/selectableItemBackground"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

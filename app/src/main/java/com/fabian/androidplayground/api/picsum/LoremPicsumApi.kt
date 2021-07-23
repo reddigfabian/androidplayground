@@ -46,7 +46,6 @@ interface LoremPicsumService{
     fun imageListAsync(@Query("limit") limit: Int?, @Query("page") page: Int?): Deferred<List<Picsum>>
 }
 
-
 @Parcelize
 data class Picsum(
     val id: String,

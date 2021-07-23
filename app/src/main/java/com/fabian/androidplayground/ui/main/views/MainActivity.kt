@@ -7,64 +7,23 @@ import androidx.navigation.Navigation.findNavController
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingActivity
 import com.fabian.androidplayground.databinding.ActivityMainBinding
-import com.fabian.androidplayground.ui.main.launch.viewmodels.LaunchViewModel
-import com.fabian.androidplayground.ui.main.list.viewmodels.ListViewModel
 import com.fabian.androidplayground.ui.main.viewmodels.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-
-private const val TAG = "MainActivity"
 
 @ExperimentalCoroutinesApi
 @FlowPreview
 class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private val mainViewModel : MainViewModel by viewModels()
-    private val launchViewModel : LaunchViewModel by viewModels()
-    private val listViewModel : ListViewModel by viewModels { ListViewModel.Factory() }
-    private val detailVieWModel : LaunchViewModel by viewModels()
-
-    private lateinit var navController : NavController
 
     override fun onStart() {
         super.onStart()
 
-        navController = findNavController(this, R.id.navHostFragment)
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            mainViewModel.handleNavigationDestinationChange(destination.id)
-        }
-
         mainViewModel.getTitleResID().observe(this) { titleResID ->
             supportActionBar?.title = getString(titleResID)
-        }
-
-        listViewModel.picsumClickLiveData.observe(this) {
-            mainViewModel.onListItemSelected(it)
-        }
-
-        lifecycleScope.launch {
-            mainViewModel.mainStateAsFlow().collectLatest { mainState ->
-                if (mainState.viewState.destinationId != navController.graph.startDestination) {
-                    if (!navController.popBackStack(mainState.viewState.destinationId, false)) {
-                        navController.navigate(mainState.viewState.destinationId, mainState.viewStateArgs, mainState.navOptions, mainState.extras)
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            val viewModelClickEventFlows = listOf(
-                launchViewModel.getClickEventFlow(),
-                detailVieWModel.getClickEventFlow()
-            )
-            viewModelClickEventFlows.merge().collect {
-                mainViewModel.onClick(it)
-            }
         }
     }
 }

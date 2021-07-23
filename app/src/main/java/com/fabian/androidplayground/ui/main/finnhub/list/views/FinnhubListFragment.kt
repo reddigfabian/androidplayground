@@ -1,4 +1,4 @@
-package com.fabian.androidplayground.ui.main.list.views
+package com.fabian.androidplayground.ui.main.finnhub.list.views
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -6,43 +6,39 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navGraphViewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
 import com.fabian.androidplayground.common.recyclerview.LoadStateAdapter
 import com.fabian.androidplayground.common.utils.UIUtils
-import com.fabian.androidplayground.databinding.FragmentListBinding
-import com.fabian.androidplayground.ui.main.list.MainListAdapter
-import com.fabian.androidplayground.ui.main.list.viewmodels.ListViewModel
+import com.fabian.androidplayground.databinding.FragmentFinnhubListBinding
+import com.fabian.androidplayground.ui.main.finnhub.list.FinnhubListAdapter
+import com.fabian.androidplayground.ui.main.finnhub.list.viewmodels.FinnhubListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragment_list) {
+class FinnhubListFragment : BaseDataBindingFragment<FragmentFinnhubListBinding>(R.layout.fragment_finnhub_list) {
 
-    private val listViewModel: ListViewModel by activityViewModels { ListViewModel.Factory() }
-    private lateinit var mainListAdapter: MainListAdapter
+    private val finnhubListViewModel: FinnhubListViewModel by navGraphViewModels(R.navigation.main_nav_graph)
+    private lateinit var mainListAdapter: FinnhubListAdapter
 
-    override fun setDataBoundViewModels(binding: FragmentListBinding) {
-        setHasOptionsMenu(true)
+    override fun setDataBoundViewModels(binding: FragmentFinnhubListBinding) {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.listViewModel = listViewModel
+        binding.listViewModel = finnhubListViewModel
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mainListAdapter = MainListAdapter(viewLifecycleOwner)
-        mainListAdapter.addItemClickListener(listViewModel)
+        setHasOptionsMenu(true)
+        mainListAdapter = FinnhubListAdapter(viewLifecycleOwner)
+        mainListAdapter.addItemClickListener(finnhubListViewModel)
 
         context?.let { nonNullContext ->
             val gradientDrawable = GradientDrawable()
@@ -70,23 +66,23 @@ class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragm
         withLoadStateFooter.addAdapter(0, refreshStateAdapter)
         mainListAdapter.addLoadStateListener {
             val refresh = it.refresh
-            if (listViewModel.swipeRefreshing.value != true) {
+            if (finnhubListViewModel.swipeRefreshing.value != true) {
                 refreshStateAdapter.loadState = refresh
             } else {
                 if (refresh is LoadState.NotLoading) {
-                    listViewModel.swipeRefreshing.value = false
+                    finnhubListViewModel.swipeRefreshing.value = false
                 }
             }
         }
 
-        listViewModel.swipeRefreshing.observe(viewLifecycleOwner) {
+        finnhubListViewModel.swipeRefreshing.observe(viewLifecycleOwner) {
             mainListAdapter.refresh()
         }
 
         binding.mainListRecycler.layoutManager =
             StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
         binding.mainListRecycler.adapter = withLoadStateFooter
-        listViewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
+        finnhubListViewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
             mainListAdapter.setData(pagingData)
         }
     }
@@ -99,13 +95,13 @@ class ListFragment : BaseDataBindingFragment<FragmentListBinding>(R.layout.fragm
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuClear -> {
-                listViewModel.clearStateFlow.value = !listViewModel.clearStateFlow.value
+                finnhubListViewModel.clearStateFlow.value = !finnhubListViewModel.clearStateFlow.value
             }
             R.id.menuInvalidateSource -> {
-                listViewModel.pagingSource?.invalidate()
+                finnhubListViewModel.pagingSource?.invalidate()
             }
             R.id.menuInvalidateFactory -> {
-                listViewModel.pagingSourceFactory.invalidate()
+                finnhubListViewModel.pagingSourceFactory.invalidate()
             }
         }
         return super.onOptionsItemSelected(item)

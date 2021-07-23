@@ -3,33 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/MainLaunchFragment">
+    app:startDestination="@id/LaunchFragment">
+
+<!--    <include app:graph="@navigation/lorem_picsum_nav_graph" />-->
+
+<!--    <include app:graph="@navigation/finnhub_nav_graph" />-->
 
     <fragment
-        android:id="@+id/MainLaunchFragment"
+        android:id="@+id/LaunchFragment"
         android:name="com.fabian.androidplayground.ui.main.launch.views.LaunchFragment"
         tools:layout="@layout/fragment_launch">
         <action
-            android:id="@+id/action_launch_to_list"
-            app:destination="@id/MainListFragment"/>
+            android:id="@+id/action_launch_to_picsum"
+            app:destination="@+id/LoremPicsumListFragment"/>
+        <action
+            android:id="@+id/action_launch_to_finnhub"
+            app:destination="@+id/FinnhubListFragment"/>
     </fragment>
 
     <fragment
-        android:id="@+id/MainListFragment"
-        android:name="com.fabian.androidplayground.ui.main.list.views.ListFragment"
-        tools:layout="@layout/fragment_list">
+        android:id="@+id/LoremPicsumListFragment"
+        android:name="com.fabian.androidplayground.ui.main.picsum.list.views.LoremPicsumListFragment"
+        tools:layout="@layout/fragment_lorem_picsum_list">
         <action
             android:id="@+id/action_list_to_detail"
-            app:destination="@id/MainDetailFragment"/>
+            app:destination="@id/LoremPicsumDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/LoremPicsumDetailFragment"
+        android:name="com.fabian.androidplayground.ui.main.picsum.detail.views.LoremPicsumDetailFragment"
+        tools:layout="@layout/fragment_lorem_picsum_detail">
+        <argument
+            android:name="picsum"
+            app:argType="com.fabian.androidplayground.api.picsum.Picsum" />
     </fragment>
 
     <fragment
-        android:id="@+id/MainDetailFragment"
-        android:name="com.fabian.androidplayground.ui.main.detail.views.DetailFragment"
-        tools:layout="@layout/fragment_detail">
+        android:id="@+id/FinnhubListFragment"
+        android:name="com.fabian.androidplayground.ui.main.finnhub.list.views.FinnhubListFragment"
+        tools:layout="@layout/fragment_finnhub_list">
+        <action
+            android:id="@+id/action_list_to_detail"
+            app:destination="@id/FinnhubDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/FinnhubDetailFragment"
+        android:name="com.fabian.androidplayground.ui.main.finnhub.detail.views.FinnhubDetailFragment"
+        tools:layout="@layout/fragment_finnhub_detail">
         <argument
             android:name="picsum"
-            app:argType="com.fabian.androidplayground.api.picsum.Picsum"/>
+            app:argType="com.fabian.androidplayground.api.picsum.Picsum" />
     </fragment>
 
 </navigation>

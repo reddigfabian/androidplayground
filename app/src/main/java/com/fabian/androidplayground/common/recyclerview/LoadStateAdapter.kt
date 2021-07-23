@@ -3,13 +3,13 @@ package com.fabian.androidplayground.common.recyclerview
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.fabian.androidplayground.common.recyclerview.views.NetworkStateItemViewHolder
-import com.fabian.androidplayground.ui.main.list.MainListAdapter
+import com.fabian.androidplayground.common.recyclerview.views.BindingViewHolder
+import com.fabian.androidplayground.common.recyclerview.views.RecyclerStateItemViewHolder
 
-class LoadStateAdapter(private val adapter: MainListAdapter // TODO: 2/19/21 Make generic
-) : LoadStateAdapter<NetworkStateItemViewHolder>() {
-    override fun onBindViewHolder(holder: NetworkStateItemViewHolder, loadState: LoadState) {
+class LoadStateAdapter<T : Any>(private val adapter: PagingDataAdapter<T, BindingViewHolder>) : LoadStateAdapter<RecyclerStateItemViewHolder>() {
+    override fun onBindViewHolder(holder: RecyclerStateItemViewHolder, loadState: LoadState) {
         val layoutParams = holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
         layoutParams.isFullSpan = true
         holder.bindTo(loadState)
@@ -18,7 +18,7 @@ class LoadStateAdapter(private val adapter: MainListAdapter // TODO: 2/19/21 Mak
     override fun onCreateViewHolder(
             parent: ViewGroup,
             loadState: LoadState
-    ): NetworkStateItemViewHolder {
-        return NetworkStateItemViewHolder(parent) { adapter.retry() }
+    ): RecyclerStateItemViewHolder {
+        return RecyclerStateItemViewHolder(parent) { adapter.retry() }
     }
 }

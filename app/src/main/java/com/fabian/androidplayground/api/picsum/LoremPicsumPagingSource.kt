@@ -19,7 +19,7 @@ class LoremPicsumPagingSource : PagingSource<Int, Picsum>()  {
 //            val picsumResponse = if (r < 3) {
 //                listOf()
 //            } else {
-            delay(2000) //fake loading time
+//            delay(2000) //fake loading time
             val picsumResponse = LoremPicsumApi.loremPicsumService.imageListAsync(limit = limit, page = page).await()
 //            }
             val nextKey = if (picsumResponse.isEmpty()) {

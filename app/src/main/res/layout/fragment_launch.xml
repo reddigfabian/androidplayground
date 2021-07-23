@@ -5,25 +5,39 @@
 
     <data>
         <variable
-            name="launchVieWModel"
+            name="launchViewModel"
             type="com.fabian.androidplayground.ui.main.launch.viewmodels.LaunchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.detail.views.LaunchFragment">
+        tools:context=".ui.main.picsum.detail.views.LaunchFragment">
 
         <Button
-            android:id="@+id/startButton"
+            android:id="@+id/picsumButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="160dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/finnhubButton"
+            android:text="@string/lorem_picsum"
+            android:onClick="@{launchViewModel::onClick}"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+        <Button
+            android:id="@+id/finnhubButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="160dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/picsumButton"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="@string/start"
-            android:onClick="@{launchVieWModel::onClick}"/>
+            android:text="@string/finnhub"
+            android:onClick="@{launchViewModel::onClick}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

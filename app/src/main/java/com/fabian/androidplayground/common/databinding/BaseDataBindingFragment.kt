@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
-abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private val layoutRes:Int) : Fragment() {
+abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private val layoutRes : Int) : Fragment() {
 
     private var _viewDataBinding : T? = null
     protected val binding get() = _viewDataBinding!!
@@ -28,6 +29,7 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
         activity?.onBackPressed()
     }
 
+    @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _viewDataBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
         binding.lifecycleOwner = this
@@ -35,11 +37,7 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, backButtonCallback)
-    }
-
+    @CallSuper
     override fun onDestroyView() {
         super.onDestroyView()
         _viewDataBinding = null

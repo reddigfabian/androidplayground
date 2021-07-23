@@ -13,4 +13,6 @@
     <string name="retry">Retry</string>
     <string name="start">Start</string>
     <string name="launch">Launch</string>
+    <string name="lorem_picsum">Lorem Picsum</string>
+    <string name="finnhub">Finnhub</string>
 </resources>

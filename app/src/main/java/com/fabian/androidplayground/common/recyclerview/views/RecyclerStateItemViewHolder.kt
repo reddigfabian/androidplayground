@@ -7,15 +7,15 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.databinding.ItemNetworkStateBinding
+import com.fabian.androidplayground.databinding.ItemRecyclerStateBinding
 
-class NetworkStateItemViewHolder(
+class RecyclerStateItemViewHolder(
         parent: ViewGroup,
         private val retryCallback: () -> Unit
 ) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_network_state, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_state, parent, false)
 ) {
-    private val binding = ItemNetworkStateBinding.bind(itemView)
+    private val binding = ItemRecyclerStateBinding.bind(itemView)
     private val loadingAnimationView = binding.loadingAnimationView
     private val errorMsg = binding.errorMsg
     private val retry = binding.retryButton

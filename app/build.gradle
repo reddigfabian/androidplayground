@@ -65,6 +65,11 @@ dependencies {
     kapt Dependencies.moshiKapt
     implementation Dependencies.retrofitCoroutines
     implementation Dependencies.retrofitLogInterceptor
+    implementation Dependencies.scarlet
+    implementation Dependencies.scarletMoshi
+//    implementation Dependencies.scarletOkHttpWebsocket
+    implementation Dependencies.scarletLifeCycle
+    implementation Dependencies.scarletCoroutines
 
     //LeakCanary
     debugImplementation Dependencies.leakCanary

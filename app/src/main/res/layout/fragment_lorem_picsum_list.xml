@@ -5,14 +5,14 @@
 
     <data>
         <variable
-            name="listViewModel"
-            type="com.fabian.androidplayground.ui.main.list.viewmodels.ListViewModel" />
+            name="loremPicsumListViewModel"
+            type="com.fabian.androidplayground.ui.main.picsum.list.viewmodels.LoremPicsumListViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.list.views.AudioFragment">
+        tools:context=".ui.main.picsum.list.views.AudioFragment">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/mainSwipeRefresh"
@@ -22,15 +22,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:refreshing="@{listViewModel.swipeRefreshing}"
-            app:onRefreshListener="@{() -> listViewModel.onSwipeRefresh()}">
+            app:refreshing="@{loremPicsumListViewModel.swipeRefreshing}"
+            app:onRefreshListener="@{() -> loremPicsumListViewModel.onSwipeRefresh()}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/mainListRecycler"
                 android:orientation="vertical"
-                app:isVisibleGone="@{!listViewModel.isEmptyLiveData()}"/>
+                app:isVisibleGone="@{!loremPicsumListViewModel.isEmptyLiveData()}"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -45,7 +45,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:isVisibleGone="@{listViewModel.isEmptyLiveData()}"/>
+            app:isVisibleGone="@{loremPicsumListViewModel.isEmptyLiveData()}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
