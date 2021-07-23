@@ -13,18 +13,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.fabian.androidplayground.R
+import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
 import com.fabian.androidplayground.common.recyclerview.LoadStateAdapter
 import com.fabian.androidplayground.common.utils.UIUtils
 import com.fabian.androidplayground.databinding.FragmentLoremPicsumListBinding
 import com.fabian.androidplayground.ui.main.picsum.list.LoremPicsumListAdapter
 import com.fabian.androidplayground.ui.main.picsum.list.viewmodels.LoremPicsumListViewModel
-import com.fabian.androidplayground.ui.main.picsum.views.AbstractLoremPicsumFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class LoremPicsumListFragment : AbstractLoremPicsumFragment<FragmentLoremPicsumListBinding>(R.layout.fragment_lorem_picsum_list) {
+class LoremPicsumListFragment : BaseDataBindingFragment<FragmentLoremPicsumListBinding>(R.layout.fragment_lorem_picsum_list) {
 
     private val loremPicsumListViewModel: LoremPicsumListViewModel by viewModels()
     private lateinit var loremPicsumListAdapter : LoremPicsumListAdapter

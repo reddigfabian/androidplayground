@@ -6,7 +6,7 @@
     <data>
         <variable
             name="finnhubDetailViewModel"
-            type="com.fabian.androidplayground.ui.main.picsum.detail.viewmodels.FinnhubDetailViewModel"/>
+            type="com.fabian.androidplayground.ui.main.finnhub.detail.viewmodels.FinnhubDetailViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

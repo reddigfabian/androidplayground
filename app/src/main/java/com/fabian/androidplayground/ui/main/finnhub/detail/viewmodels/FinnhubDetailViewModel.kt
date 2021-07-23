@@ -1,4 +1,4 @@
-package com.fabian.androidplayground.ui.main.picsum.detail.viewmodels
+package com.fabian.androidplayground.ui.main.finnhub.detail.viewmodels
 
 import android.view.View
 import androidx.lifecycle.ViewModel
@@ -8,16 +8,5 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 class FinnhubDetailViewModel : ViewModel() {
-
     var pic: Picsum? = null
-
-    private val clickEventChannel = Channel<Int>(Channel.CONFLATED)
-
-    fun getClickEventFlow() : Flow<Int> {
-        return clickEventChannel.receiveAsFlow()
-    }
-
-    fun onClick(v : View) {
-        clickEventChannel.trySend(v.id)
-    }
 }
