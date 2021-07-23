@@ -10,12 +10,6 @@ import kotlinx.coroutines.flow.map
 @FlowPreview
 class StateManagerImpl<T : State>(key : String, defaultState : T) : StateManagerInterface<T> {
     private val mutableStateFlow = MutableStateFlow(defaultState)
-    private val stateFlow = mutableStateFlow.map {
-        if (it.viewState is ExitState) {
-            StateManagerFactory.removeStateManager(key)
-        }
-        it
-    }
 
     override fun setState(newState : T) {
         mutableStateFlow.value = newState
@@ -25,7 +19,7 @@ class StateManagerImpl<T : State>(key : String, defaultState : T) : StateManager
         return mutableStateFlow.value
     }
 
-    override fun getStateAsFlow(): Flow<T> {
-        return stateFlow
+    override fun getStateAsFlow(): MutableStateFlow<T> {
+        return mutableStateFlow
     }
 }

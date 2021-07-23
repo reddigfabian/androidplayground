@@ -21,11 +21,22 @@ abstract class StateFragment<R : State, T : ViewDataBinding>(@LayoutRes layoutRe
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    onBackPressed()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    override fun onResume() {
+        super.onResume()
         job?.cancel()
         job = lifecycleScope.launch {
             getStateFlow().collectLatest { state ->
                 val navController = findNavController()
-                if (state.viewState == ExitState) {
+                if (state.viewState is ExitState) {
                     if (!navController.popBackStack()) {
                         requireActivity().finish()
                     }
@@ -45,19 +56,11 @@ abstract class StateFragment<R : State, T : ViewDataBinding>(@LayoutRes layoutRe
                 }
             }
         }
-
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    onBackPressed()
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (getCurrentState().viewState == ExitState) {
+    override fun onPause() {
+        super.onPause()
+        if (getCurrentState().viewState is ExitState) {
             job?.cancel()
             job = null
         }

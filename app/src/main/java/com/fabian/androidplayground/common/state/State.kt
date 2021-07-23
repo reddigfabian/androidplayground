@@ -11,4 +11,5 @@ abstract class State(val viewState : ViewState,
 )
 
 abstract class ViewState(val destinationId : Int)
-object ExitState : ViewState(0)
+object DestroyState : ViewState(0)
+object PauseState : ViewState(0)
