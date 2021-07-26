@@ -23,11 +23,13 @@ object  LoremPicsumApi {
 
 private const val BASE_URL = "https://picsum.photos/v2/"
 private const val LIST_ENDPOINT = "list"
-
-var interceptor  = HttpLoggingInterceptor().apply {
-    level = HttpLoggingInterceptor.Level.BASIC
-}
-var client: OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).build()
+//
+//var interceptor  = HttpLoggingInterceptor().apply {
+//    level = HttpLoggingInterceptor.Level.BASIC
+//}
+var client: OkHttpClient = OkHttpClient.Builder()
+//    .addInterceptor(interceptor)
+    .build()
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -38,7 +40,7 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .addCallAdapterFactory(CoroutineCallAdapterFactory())
     .baseUrl(BASE_URL)
-//    .client(client)
+    .client(client)
     .build()
 
 interface LoremPicsumService{

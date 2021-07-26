@@ -14,4 +14,8 @@
         android:id="@+id/menuClear"
         android:title="Clear"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menuRefresh"
+        android:title="Adapter Refresh"
+        app:showAsAction="never" />
 </menu>

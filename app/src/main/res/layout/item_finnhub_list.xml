@@ -5,28 +5,38 @@
 
     <data>
         <variable
-            name="loremPicsumItemViewModel"
+            name="finnhubItemViewModel"
             type="com.fabian.androidplayground.ui.main.finnhub.list.viewmodels.FinnhubItemViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/mainListItemRoot"
+        android:id="@+id/finnhubListItemRoot"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
-        <com.fabian.androidplayground.common.views.DynamicHeightImageView
-            android:id="@+id/mainListItemImage"
+        <TextView
+            android:id="@+id/tvSymbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:layout_width="400dp"
-            tools:layout_height="300dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@{finnhubItemViewModel.stockName}"
+            android:textColor="@color/black"
+            tools:text="Hi"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
-            app:picsum="@{loremPicsumItemViewModel.pic}"
-            app:picsumSize="@{0.05}"
-            android:foreground="?attr/selectableItemBackground"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{finnhubItemViewModel.price}"
+            android:textColor="@color/black"
+            tools:text="Hi"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSymbol"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

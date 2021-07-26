@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="listViewModel"
+            name="finnhubListViewModel"
             type="com.fabian.androidplayground.ui.main.finnhub.list.viewmodels.FinnhubListViewModel"/>
     </data>
 
@@ -22,15 +22,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:refreshing="@{listViewModel.swipeRefreshing}"
-            app:onRefreshListener="@{() -> listViewModel.onSwipeRefresh()}">
+            app:refreshing="@{finnhubListViewModel.swipeRefreshing}"
+            app:onRefreshListener="@{() -> finnhubListViewModel.onSwipeRefresh()}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/mainListRecycler"
                 android:orientation="vertical"
-                app:isVisibleGone="@{!listViewModel.isEmptyLiveData()}"/>
+                app:isVisibleGone="@{!finnhubListViewModel.isEmptyLiveData()}"
+                android:scrollbars="vertical"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -45,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:isVisibleGone="@{listViewModel.isEmptyLiveData()}"/>
+            app:isVisibleGone="@{finnhubListViewModel.isEmptyLiveData()}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

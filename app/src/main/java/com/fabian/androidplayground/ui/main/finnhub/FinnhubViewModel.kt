@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.FragmentNavigator
 import com.fabian.androidplayground.R
+import com.fabian.androidplayground.api.finnhub.FinnhubStockSymbol
 import com.fabian.androidplayground.api.picsum.Picsum
 import com.fabian.androidplayground.ui.main.finnhub.detail.views.FinnhubDetailFragmentArgs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +27,7 @@ class FinnhubViewModel : ViewModel() {
         }
     }
 
-    fun onListItemSelected(item : Picsum) {
+    fun onListItemSelected(item : FinnhubStockSymbol) {
         finnhubStateFlow.value = FinnhubState(FinnhubState.ViewState.Detail, FinnhubDetailFragmentArgs(item).toBundle())
     }
 

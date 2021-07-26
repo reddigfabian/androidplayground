@@ -22,6 +22,11 @@ class BindingViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(
         paused = false
     }
 
+    fun lifecycleDestroy() {
+        lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
+        paused = false
+    }
+
     override fun getLifecycle(): Lifecycle {
         return lifecycleRegistry
     }

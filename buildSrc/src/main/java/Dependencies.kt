@@ -5,7 +5,7 @@ object Versions {
 
     //IDE
     const val gradleVersionsPlugin = "0.36.0"
-    const val kotlin = "1.4.30"
+    const val kotlin = "1.5.20"
     const val gradlePlugin = "4.2.1"
 
     //App
@@ -17,6 +17,7 @@ object Versions {
     const val appCompat = "1.3.0"
     const val paging = "3.0.0"
     const val navVersion = "2.3.5"
+    const val lifeCycleRuntime = "2.4.0-alpha02"
 
     //Design/UI
     const val material = "1.3.0"
@@ -58,6 +59,7 @@ object Dependencies {
     const val navigationKtx = "androidx.navigation:navigation-fragment-ktx:${Versions.navVersion}"
     const val navigationUIKTX = "androidx.navigation:navigation-ui-ktx:${Versions.navVersion}"
     const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navVersion}"
+    const val lifeCycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifeCycleRuntime}"
 
     //Design/UI
     const val material = "com.google.android.material:material:${Versions.material}"

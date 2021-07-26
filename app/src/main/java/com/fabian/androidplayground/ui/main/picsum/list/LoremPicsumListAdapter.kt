@@ -17,7 +17,7 @@ import com.fabian.androidplayground.ui.main.picsum.list.viewmodels.toRecyclerIte
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
-class LoremPicsumListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<LoremPicsumItemViewModel>(ITEM_COMPARATOR) {
+class LoremPicsumListAdapter(lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<LoremPicsumItemViewModel>(lifecycleOwner, ITEM_COMPARATOR) {
 
     fun setData(pagingData: PagingData<Picsum>) {
         submitData(lifecycleOwner.lifecycle, pagingData
@@ -36,8 +36,8 @@ class LoremPicsumListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemC
             (holder.binding as? ItemLoremPicsumListBinding)?.let { itemMainListBinding ->
                 item.toRecyclerItem().bind(holder.binding)
                 holder.lifecycle.addObserver(item)
-                itemMainListBinding.mainListItemRoot.setOnClickListener { notifyListenersOfClick(item) }
-                itemMainListBinding.mainListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(item) }
+                itemMainListBinding.loremPicsumListItemRoot.setOnClickListener { notifyListenersOfClick(item) }
+                itemMainListBinding.loremPicsumListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(item) }
                 itemMainListBinding.executePendingBindings()
             }
         }
@@ -51,15 +51,5 @@ class LoremPicsumListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemC
             override fun areItemsTheSame(oldItem: LoremPicsumItemViewModel, newItem: LoremPicsumItemViewModel): Boolean =
                     oldItem == newItem
         }
-    }
-
-    override fun onViewAttachedToWindow(holder: BindingViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        holder.attachToWindow()
-    }
-
-    override fun onViewDetachedFromWindow(holder: BindingViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        holder.detachFromWindow()
     }
 }

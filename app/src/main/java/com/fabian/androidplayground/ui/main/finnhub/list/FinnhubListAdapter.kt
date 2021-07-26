@@ -3,25 +3,34 @@ package com.fabian.androidplayground.ui.main.finnhub.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.api.picsum.Picsum
+import com.fabian.androidplayground.api.finnhub.FinnhubStockSymbol
+import com.fabian.androidplayground.common.datastructures.WeakMutableSet
 import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
 import com.fabian.androidplayground.common.recyclerview.views.BindingViewHolder
 import com.fabian.androidplayground.databinding.ItemFinnhubListBinding
 import com.fabian.androidplayground.ui.main.finnhub.list.viewmodels.FinnhubItemViewModel
 import com.fabian.androidplayground.ui.main.finnhub.list.viewmodels.toRecyclerItem
 import kotlinx.coroutines.FlowPreview
+import java.lang.ref.WeakReference
+import java.util.*
 
 @FlowPreview
-class FinnhubListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<FinnhubItemViewModel>(
-    ITEM_COMPARATOR
-) {
+class FinnhubListAdapter(lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<FinnhubItemViewModel>(lifecycleOwner, ITEM_COMPARATOR) {
 
-    fun setData(pagingData: PagingData<Picsum>) {
+    init {
+        lifecycleOwner.lifecycle.addObserver(this)
+    }
+
+    fun setData(pagingData: PagingData<FinnhubStockSymbol>) {
         submitData(lifecycleOwner.lifecycle, pagingData
             .map { picsum ->
                 FinnhubItemViewModel(picsum)
@@ -38,8 +47,8 @@ class FinnhubListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemClick
             (holder.binding as? ItemFinnhubListBinding)?.let { itemMainListBinding ->
                 item.toRecyclerItem().bind(holder.binding)
                 holder.lifecycle.addObserver(item)
-                itemMainListBinding.mainListItemRoot.setOnClickListener { notifyListenersOfClick(item) }
-                itemMainListBinding.mainListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(item) }
+                itemMainListBinding.finnhubListItemRoot.setOnClickListener { notifyListenersOfClick(item) }
+                itemMainListBinding.finnhubListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(item) }
                 itemMainListBinding.executePendingBindings()
             }
         }
@@ -48,20 +57,10 @@ class FinnhubListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemClick
     companion object {
         val ITEM_COMPARATOR = object : DiffUtil.ItemCallback<FinnhubItemViewModel>() {
             override fun areContentsTheSame(oldItem: FinnhubItemViewModel, newItem: FinnhubItemViewModel): Boolean =
-                    oldItem.pic == newItem.pic
+                    oldItem.finnhubStock == newItem.finnhubStock
 
             override fun areItemsTheSame(oldItem: FinnhubItemViewModel, newItem: FinnhubItemViewModel): Boolean =
                     oldItem == newItem
         }
-    }
-
-    override fun onViewAttachedToWindow(holder: BindingViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        holder.attachToWindow()
-    }
-
-    override fun onViewDetachedFromWindow(holder: BindingViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        holder.detachFromWindow()
     }
 }

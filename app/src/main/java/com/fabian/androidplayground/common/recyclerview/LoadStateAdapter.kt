@@ -10,14 +10,16 @@ import com.fabian.androidplayground.common.recyclerview.views.RecyclerStateItemV
 
 class LoadStateAdapter<T : Any>(private val adapter: PagingDataAdapter<T, BindingViewHolder>) : LoadStateAdapter<RecyclerStateItemViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerStateItemViewHolder, loadState: LoadState) {
-        val layoutParams = holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
-        layoutParams.isFullSpan = true
+        if (holder.itemView.layoutParams is StaggeredGridLayoutManager.LayoutParams) {
+            val layoutParams = holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
+            layoutParams.isFullSpan = true
+        }
         holder.bindTo(loadState)
     }
 
     override fun onCreateViewHolder(
-            parent: ViewGroup,
-            loadState: LoadState
+        parent: ViewGroup,
+        loadState: LoadState
     ): RecyclerStateItemViewHolder {
         return RecyclerStateItemViewHolder(parent) { adapter.retry() }
     }
