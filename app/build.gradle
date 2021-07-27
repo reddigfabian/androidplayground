@@ -13,6 +13,10 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    aaptOptions {
+        noCompress "tflite"
+    }
+
     defaultConfig {
         applicationId "com.fabian.androidplayground"
         minSdkVersion 28
@@ -41,6 +45,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        mlModelBinding true
+    }
 
     buildFeatures.dataBinding true
 }
@@ -59,6 +66,10 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.5.1'
+
+    //TensorFlow
+    implementation 'org.tensorflow:tensorflow-lite-task-vision:0.2.0'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc2'
 
     //Design/UI
     implementation Dependencies.material

@@ -25,6 +25,9 @@ class LaunchViewModel : ViewModel() {
                 R.id.finnhubButton -> {
                     navigationInstructions.emit(NavInstructions(R.id.finnhub_nav_graph))
                 }
+                R.id.tensorFlowButton -> {
+                    navigationInstructions.emit(NavInstructions(R.id.tensorflow_nav_graph))
+                }
             }
         }
     }

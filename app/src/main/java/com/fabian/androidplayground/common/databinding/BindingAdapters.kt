@@ -1,12 +1,20 @@
 package com.fabian.androidplayground.common.databinding
 
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.BindingAdapter
+import androidx.databinding.adapters.ListenerUtil
 import coil.load
 import com.airbnb.lottie.LottieAnimationView
+import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.Picsum
 import com.fabian.androidplayground.common.views.DynamicHeightImageView
 
@@ -53,23 +61,23 @@ fun isVisibleGone(view : View, visible : Boolean) {
     }
 }
 
-//@BindingAdapter("onItemClick")
-//fun <T : Any> onItemClick(recycler : RecyclerView, clickFunction : (T) -> Unit) {
-//    val adapters = mutableListOf(recycler.adapter)
-//    if (recycler.adapter is ConcatAdapter) {
-//        adapters.clear()
-//        (recycler.adapter as? ConcatAdapter)?.adapters?.forEach { concatAdapter ->
-//            (concatAdapter as? CustomPagingAdapter<T>)?.let { customAdapter ->
-//                adapters.add(customAdapter)
-//            }
-//        }
-//    }
-//
-//    adapters.forEach {
-//        (it as? CustomPagingAdapter<T>)?.listener = object : CustomPagingAdapter.PagingItemClickListener<T> {
-//            override fun onItemClick(item: T) {
-//                clickFunction.invoke(item)
-//            }
-//        }
-//    }
-//}
+@BindingAdapter("textChangeFunction")
+fun textChangeFunction(editText: EditText, function : (EditText) -> Unit) {
+    val newValue = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        }
+
+        override fun afterTextChanged(s: Editable) {
+            function.invoke(editText)
+        }
+    }
+
+    val oldValue = ListenerUtil.trackListener<TextWatcher>(editText, newValue, R.id.textWatcher)
+    if (oldValue != null) {
+        editText.removeTextChangedListener(oldValue)
+    }
+    editText.addTextChangedListener(newValue)
+}

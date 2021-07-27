@@ -15,4 +15,7 @@
     <string name="launch">Launch</string>
     <string name="lorem_picsum">Lorem Picsum</string>
     <string name="finnhub">Finnhub</string>
+    <string name="tensorflow">TensorFlow</string>
+    <string name="open_image_from_file">Open Image From File</string>
+    <string name="url">Url</string>
 </resources>

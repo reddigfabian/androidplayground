@@ -9,6 +9,8 @@
         app:graph="@navigation/lorem_picsum_nav_graph" />
     <include
         app:graph="@navigation/finnhub_nav_graph" />
+    <include
+        app:graph="@navigation/tensorflow_nav_graph" />
 
     <fragment
         android:id="@+id/LaunchFragment"
@@ -20,40 +22,8 @@
         <action
             android:id="@+id/action_launch_to_finnhub"
             app:destination="@id/finnhub_nav_graph"/>
+        <action
+            android:id="@+id/action_launch_to_tensorflow"
+            app:destination="@id/tensorflow_nav_graph"/>
     </fragment>
-
-<!--    <fragment-->
-<!--        android:id="@+id/LoremPicsumListFragment"-->
-<!--        android:name="com.fabian.androidplayground.ui.main.picsum.list.views.LoremPicsumListFragment"-->
-<!--        tools:layout="@layout/fragment_lorem_picsum_list">-->
-<!--        <action-->
-<!--            android:id="@+id/action_list_to_detail"-->
-<!--            app:destination="@id/LoremPicsumDetailFragment" />-->
-<!--    </fragment>-->
-<!--    <fragment-->
-<!--        android:id="@+id/LoremPicsumDetailFragment"-->
-<!--        android:name="com.fabian.androidplayground.ui.main.picsum.detail.views.LoremPicsumDetailFragment"-->
-<!--        tools:layout="@layout/fragment_lorem_picsum_detail">-->
-<!--        <argument-->
-<!--            android:name="picsum"-->
-<!--            app:argType="com.fabian.androidplayground.api.picsum.Picsum" />-->
-<!--    </fragment>-->
-
-<!--    <fragment-->
-<!--        android:id="@+id/FinnhubListFragment"-->
-<!--        android:name="com.fabian.androidplayground.ui.main.finnhub.list.views.FinnhubListFragment"-->
-<!--        tools:layout="@layout/fragment_finnhub_list">-->
-<!--        <action-->
-<!--            android:id="@+id/action_list_to_detail"-->
-<!--            app:destination="@id/FinnhubDetailFragment" />-->
-<!--    </fragment>-->
-<!--    <fragment-->
-<!--        android:id="@+id/FinnhubDetailFragment"-->
-<!--        android:name="com.fabian.androidplayground.ui.main.finnhub.detail.views.FinnhubDetailFragment"-->
-<!--        tools:layout="@layout/fragment_finnhub_detail">-->
-<!--        <argument-->
-<!--            android:name="picsum"-->
-<!--            app:argType="com.fabian.androidplayground.api.picsum.Picsum" />-->
-<!--    </fragment>-->
-
 </navigation>
