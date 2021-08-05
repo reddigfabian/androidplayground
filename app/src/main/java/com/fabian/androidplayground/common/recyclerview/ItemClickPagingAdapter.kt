@@ -1,9 +1,8 @@
 package com.fabian.androidplayground.common.recyclerview
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 
-abstract class ItemClickPagingAdapter<T : Any>(lifecycleOwner: LifecycleOwner, diffCallback: DiffUtil.ItemCallback<T>) : LifecycleDatabindingPagingAdapter<T>(lifecycleOwner, diffCallback) {
+abstract class ItemClickPagingAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) : LifecycleDatabindingPagingAdapter<T>(diffCallback) {
 
     interface ItemClickListener<T> {
         fun onItemClick(item : T)

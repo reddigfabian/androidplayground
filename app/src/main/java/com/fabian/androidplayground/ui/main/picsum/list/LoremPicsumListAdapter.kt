@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
@@ -17,7 +18,7 @@ import com.fabian.androidplayground.ui.main.picsum.list.viewmodels.toRecyclerIte
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
-class LoremPicsumListAdapter(lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<LoremPicsumItemViewModel>(lifecycleOwner, ITEM_COMPARATOR) {
+class LoremPicsumListAdapter(private val lifecycleOwner: LifecycleOwner, viewModelProviderOwner: ViewModelStoreOwner) : ItemClickPagingAdapter<LoremPicsumItemViewModel>(ITEM_COMPARATOR) {
 
     fun setData(pagingData: PagingData<Picsum>) {
         submitData(lifecycleOwner.lifecycle, pagingData
@@ -46,7 +47,7 @@ class LoremPicsumListAdapter(lifecycleOwner: LifecycleOwner) : ItemClickPagingAd
     companion object {
         val ITEM_COMPARATOR = object : DiffUtil.ItemCallback<LoremPicsumItemViewModel>() {
             override fun areContentsTheSame(oldItem: LoremPicsumItemViewModel, newItem: LoremPicsumItemViewModel): Boolean =
-                    oldItem.pic == newItem.pic
+                    oldItem.picsum == newItem.picsum
 
             override fun areItemsTheSame(oldItem: LoremPicsumItemViewModel, newItem: LoremPicsumItemViewModel): Boolean =
                     oldItem == newItem

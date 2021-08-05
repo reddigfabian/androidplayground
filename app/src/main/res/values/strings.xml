@@ -18,4 +18,5 @@
     <string name="tensorflow">TensorFlow</string>
     <string name="open_image_from_file">Open Image From File</string>
     <string name="url">Url</string>
+    <string name="lorem_picsum_room">Lorem Picsum / Room</string>
 </resources>

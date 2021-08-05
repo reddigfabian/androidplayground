@@ -15,13 +15,7 @@ class LoremPicsumPagingSource : PagingSource<Int, Picsum>()  {
         return try {
             val page = if (params is LoadParams.Append) params.key else PICSUM_STARTING_PAGE
             val limit = params.loadSize
-//            val r = Random.nextInt(10)
-//            val picsumResponse = if (r < 3) {
-//                listOf()
-//            } else {
-//            delay(2000) //fake loading time
-            val picsumResponse = LoremPicsumApi.loremPicsumService.imageListAsync(limit = limit, page = page).await()
-//            }
+            val picsumResponse = LoremPicsumApi.loremPicsumService.imageList(limit = limit, page = page)
             val nextKey = if (picsumResponse.isEmpty()) {
                 null
             } else {

@@ -6,18 +6,26 @@ object Versions {
     //IDE
     const val gradleVersionsPlugin = "0.36.0"
     const val kotlin = "1.5.20"
-    const val gradlePlugin = "4.2.1"
+    const val gradlePlugin = "7.0.0"
 
     //App
     //Kotlin
     const val androidCoreKtx = "1.5.0"
 
     //AndroidX
-    const val androidLifeCycleRuntimeKtx = "2.4.0-alpha02"
     const val appCompat = "1.3.0"
     const val paging = "3.0.0"
     const val navVersion = "2.3.5"
     const val lifeCycleRuntime = "2.4.0-alpha02"
+    const val kotlinxCoroutines = "1.5.1"
+
+    //Room
+    const val room = "2.3.0"
+    const val roomPaging = "2.4.0-alpha04"
+
+    //Tensorflow
+    const val tensorflowLiteTask="0.2.0"
+    const val tensorflowLiteMetadata="0.1.0-rc2"
 
     //Design/UI
     const val material = "1.3.0"
@@ -60,12 +68,23 @@ object Dependencies {
     const val navigationUIKTX = "androidx.navigation:navigation-ui-ktx:${Versions.navVersion}"
     const val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navVersion}"
     const val lifeCycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifeCycleRuntime}"
+    const val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinxCoroutines}"
+    const val kotlinxCoroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinxCoroutines}"
+    const val kotlinxCoroutinesReactive = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${Versions.kotlinxCoroutines}"
+
+    //Room
+    const val roomRuntime = "androidx.room:room-runtime:${Versions.room}"
+    const val roomKtx = "androidx.room:room-ktx:${Versions.room}"
+    const val roomAnnotationProcessor = "androidx.room:room-compiler:${Versions.room}"
+    const val roomPaging = "androidx.room:room-paging:${Versions.roomPaging}"
+
+    //Tensorflow
+    const val tensorflowLiteTask = "org.tensorflow:tensorflow-lite-task-vision:${Versions.tensorflowLiteTask}"
+    const val tensorflowLiteMetadata = "org.tensorflow:tensorflow-lite-metadata:${Versions.tensorflowLiteMetadata}"
 
     //Design/UI
     const val material = "com.google.android.material:material:${Versions.material}"
     const val lottie = "com.airbnb.android:lottie:${Versions.lottie}"
-//    const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
-//    const val glideKapt = "com.github.bumptech.glide:compiler:${Versions.glide}"
     const val coil = "io.coil-kt:coil:${Versions.coil}"
     const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.swipeRefreshLayout}"
 

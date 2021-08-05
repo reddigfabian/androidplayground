@@ -24,7 +24,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 @FlowPreview
-class FinnhubListAdapter(lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<FinnhubItemViewModel>(lifecycleOwner, ITEM_COMPARATOR) {
+class FinnhubListAdapter(private val lifecycleOwner: LifecycleOwner) : ItemClickPagingAdapter<FinnhubItemViewModel>(ITEM_COMPARATOR) {
 
     init {
         lifecycleOwner.lifecycle.addObserver(this)

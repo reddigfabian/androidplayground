@@ -59,13 +59,13 @@ class LoremPicsumListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickLi
 
     override fun onItemClick(item: LoremPicsumItemViewModel) {
         viewModelScope.launch {
-            navigationInstructions.emit(NavInstructions(R.id.LoremPicsumDetailFragment, LoremPicsumDetailFragmentArgs(item.pic).toBundle()))
+            navigationInstructions.emit(NavInstructions(R.id.LoremPicsumDetailFragment, LoremPicsumDetailFragmentArgs(item.picsum).toBundle()))
         }
     }
 
     override fun onItemLongClick(item: LoremPicsumItemViewModel) {
         val r = filterItems.value.toMutableList()
-        r.add(item.pic)
+        r.add(item.picsum)
         filterItems.value = r
     }
 }

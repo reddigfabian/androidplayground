@@ -3,7 +3,6 @@ package com.fabian.androidplayground.common.coil
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Paint
-import android.graphics.drawable.Drawable
 import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
@@ -11,7 +10,6 @@ import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.applyCanvas
-import androidx.core.graphics.drawable.toBitmap
 import coil.bitmap.BitmapPool
 import coil.size.Size
 import coil.transform.Transformation

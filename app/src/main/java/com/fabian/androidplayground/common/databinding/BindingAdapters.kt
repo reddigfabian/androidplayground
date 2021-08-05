@@ -1,6 +1,5 @@
 package com.fabian.androidplayground.common.databinding
 
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -8,8 +7,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
-import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.BindingAdapter
 import androidx.databinding.adapters.ListenerUtil
 import coil.load
@@ -33,22 +30,24 @@ fun playSpeed(animationView : LottieAnimationView, speed : Float) {
 }
 
 @BindingAdapter(value = ["picsum", "picsumSize"], requireAll = true)
-fun picsum(view : DynamicHeightImageView, pic : Picsum, sizePercent : Double = 0.05) {
-    view.heightRatio = pic.heightRatio
-    val uri = Uri.parse(pic.download_url)
-    val newPathSegments = uri.pathSegments.toMutableList()
-    newPathSegments[newPathSegments.lastIndex-1] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex - 1]) * sizePercent).toInt().toString()
-    newPathSegments[newPathSegments.lastIndex] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex]) * sizePercent).toInt().toString()
+fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double = 0.05) {
+    picsum?.let { pic ->
+        view.heightRatio = pic.heightRatio
+        val uri = Uri.parse(pic.download_url)
+        val newPathSegments = uri.pathSegments.toMutableList()
+        newPathSegments[newPathSegments.lastIndex-1] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex - 1]) * sizePercent).toInt().toString()
+        newPathSegments[newPathSegments.lastIndex] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex]) * sizePercent).toInt().toString()
 
-    val builder = Uri.Builder().scheme(uri.scheme).authority(uri.authority)
-    newPathSegments.forEach {
-        builder.appendPath(it)
-    }
-    val newUri = builder.build()
+        val builder = Uri.Builder().scheme(uri.scheme).authority(uri.authority)
+        newPathSegments.forEach {
+            builder.appendPath(it)
+        }
+        val newUri = builder.build()
 
-    view.load(newUri) {
-        crossfade(true)
-        placeholder(ColorDrawable(Color.DKGRAY))
+        view.load(newUri) {
+            crossfade(true)
+            placeholder(ColorDrawable(Color.DKGRAY))
+        }
     }
 }
 

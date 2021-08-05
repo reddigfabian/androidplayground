@@ -7,9 +7,7 @@ import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.Picsum
 import com.fabian.androidplayground.common.recyclerview.viewmodels.RecyclerItem
 
-class LoremPicsumItemViewModel(val pic: Picsum) : ViewModel(), LifecycleObserver {
-
-}
+class LoremPicsumItemViewModel(val picsum : Picsum) : ViewModel(), LifecycleObserver
 
 fun LoremPicsumItemViewModel.toRecyclerItem() =
     RecyclerItem(

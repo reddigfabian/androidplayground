@@ -22,6 +22,9 @@ class LaunchViewModel : ViewModel() {
                 R.id.picsumButton -> {
                     navigationInstructions.emit(NavInstructions(R.id.lorem_picsum_nav_graph))
                 }
+                R.id.picsumRoomButton -> {
+                    navigationInstructions.emit(NavInstructions(R.id.lorem_picsum_room_nav_graph))
+                }
                 R.id.finnhubButton -> {
                     navigationInstructions.emit(NavInstructions(R.id.finnhub_nav_graph))
                 }

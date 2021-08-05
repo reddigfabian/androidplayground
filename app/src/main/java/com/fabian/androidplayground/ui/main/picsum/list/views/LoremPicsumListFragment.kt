@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
@@ -58,7 +59,7 @@ class LoremPicsumListFragment : BaseDataBindingFragment<FragmentLoremPicsumListB
     }
 
     private fun setupRecycler() {
-        loremPicsumListAdapter = LoremPicsumListAdapter(viewLifecycleOwner)
+        loremPicsumListAdapter = LoremPicsumListAdapter(viewLifecycleOwner, this)
         loremPicsumListAdapter.addItemClickListener(loremPicsumListViewModel)
 
         context?.let { nonNullContext ->
@@ -100,7 +101,8 @@ class LoremPicsumListFragment : BaseDataBindingFragment<FragmentLoremPicsumListB
             loremPicsumListAdapter.refresh()
         }
 
-        binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
+        binding.mainListRecycler.layoutManager = LinearLayoutManager(requireContext())
+//        binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
         binding.mainListRecycler.adapter = withLoadStateFooter
         loremPicsumListViewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
             loremPicsumListAdapter.setData(pagingData)

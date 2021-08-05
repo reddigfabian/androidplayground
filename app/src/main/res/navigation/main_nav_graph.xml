@@ -8,6 +8,8 @@
     <include
         app:graph="@navigation/lorem_picsum_nav_graph" />
     <include
+        app:graph="@navigation/lorem_picsum_room_nav_graph" />
+    <include
         app:graph="@navigation/finnhub_nav_graph" />
     <include
         app:graph="@navigation/tensorflow_nav_graph" />
@@ -19,6 +21,9 @@
         <action
             android:id="@+id/action_launch_to_picsum"
             app:destination="@id/lorem_picsum_nav_graph"/>
+        <action
+            android:id="@+id/action_launch_to_picsum_room"
+            app:destination="@id/lorem_picsum_room_nav_graph"/>
         <action
             android:id="@+id/action_launch_to_finnhub"
             app:destination="@id/finnhub_nav_graph"/>

@@ -13,13 +13,13 @@ class FinnhubPagingSource : PagingSource<Int, FinnhubStockSymbol>()  {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FinnhubStockSymbol> {
         return try {
             val index = if (params is LoadParams.Append) params.key else FINNHUB_STARTING_INDEX
-            val limit = params.loadSize
+            val limit = params.loadSize + index
 //            val r = Random.nextInt(10)
 //            val picsumResponse = if (r < 3) {
 //                listOf()
 //            } else {
 //            delay(2000) //fake loading time
-            val finnhubResponse = FinnhubApi.finnhubApiRetrofitService.symbolList("US").await().subList(0, 10)
+            val finnhubResponse = FinnhubApi.finnhubApiRetrofitService.symbolList("US").await().subList(index, limit)
             finnhubResponse.forEach {
                 it.quote = FinnhubApi.finnhubApiRetrofitService.symbolQuote(it.symbol).await()
             }
@@ -27,18 +27,13 @@ class FinnhubPagingSource : PagingSource<Int, FinnhubStockSymbol>()  {
             val nextKey = if (finnhubResponse.isEmpty()) {
                 null
             } else {
-                index + (params.loadSize / 10)
+                index + params.loadSize
             }
 
-//            LoadResult.Page(
-//                data = picsumResponse,
-//                prevKey = if (page == FINNHUB_STARTING_INDEX) null else page - 1,
-//                nextKey = nextKey
-//            )
             LoadResult.Page(
                 data = finnhubResponse,
-                prevKey = null,
-                nextKey = null
+                prevKey = if (index == FINNHUB_STARTING_INDEX) null else index - limit,
+                nextKey = nextKey
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

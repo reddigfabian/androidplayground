@@ -1,19 +1,18 @@
 package com.fabian.androidplayground.api.picsum
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.android.parcel.Parcelize
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.delay
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-
 
 object  LoremPicsumApi {
     val loremPicsumService : LoremPicsumService by lazy {
@@ -23,7 +22,7 @@ object  LoremPicsumApi {
 
 private const val BASE_URL = "https://picsum.photos/v2/"
 private const val LIST_ENDPOINT = "list"
-//
+
 //var interceptor  = HttpLoggingInterceptor().apply {
 //    level = HttpLoggingInterceptor.Level.BASIC
 //}
@@ -45,12 +44,13 @@ private val retrofit = Retrofit.Builder()
 
 interface LoremPicsumService{
     @GET(LIST_ENDPOINT)
-    fun imageListAsync(@Query("limit") limit: Int?, @Query("page") page: Int?): Deferred<List<Picsum>>
+    suspend fun imageList(@Query("limit") limit: Int?, @Query("page") page: Int?): List<Picsum>
 }
 
 @Parcelize
+@Entity(tableName = "picsum")
 data class Picsum(
-    val id: String,
+    @PrimaryKey val id: String,
     val author: String,
     val width: Int,
     val height: Int,
