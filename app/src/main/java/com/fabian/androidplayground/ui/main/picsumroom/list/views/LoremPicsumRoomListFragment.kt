@@ -106,8 +106,8 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
             loremPicsumListAdapter.refresh()
         }
 
-        binding.mainListRecycler.layoutManager = LinearLayoutManager(requireContext())
-//        binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
+//        binding.mainListRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
         binding.mainListRecycler.adapter = withLoadStateFooter
         loremPicsumRoomListViewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
             lifecycleScope.launch {
