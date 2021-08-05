@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class LoremPicsumListViewModel : ViewModel(), ItemClickPagingAdapter.ItemClickListener<LoremPicsumItemViewModel> {
 
     companion object {
-        private const val PAGE_SIZE = 10
+        private const val PAGE_SIZE = 30
     }
 
     val navigationInstructions = MutableSharedFlow<NavInstructions>()
