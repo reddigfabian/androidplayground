@@ -40,7 +40,7 @@ class LoremPicsumRoomDetailViewModel private constructor(val picsum : Picsum, pr
             viewModelScope.launch(IO) {
                 db.withTransaction {
                     db.getPicsumDao().delete(pic)
-                    db.getRepoDao().delete(pic.index)
+                    db.getRepoDao().delete(pic.id)
 
                 }
             }

@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="loremPicsumItemViewModel"
-            type="com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels.LoremPicsumRoomItemViewModel"/>
+            name="picsum"
+            type="com.fabian.androidplayground.api.picsum.Picsum"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,24 +24,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
-            app:picsum="@{loremPicsumItemViewModel.picsum}"
+            app:picsum="@{picsum}"
             android:foreground="?attr/selectableItemBackground"
             tools:src="@drawable/ic_launcher_foreground"
             tools:background="@drawable/ic_launcher_background"/>
-
-        <TextView
-            android:id="@+id/tvID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{loremPicsumItemViewModel.debug}"
-            tools:text="0 | 1002"
-            android:textSize="10sp"
-            android:background="#80000000"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:padding="4dp"
-            android:layout_margin="4dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

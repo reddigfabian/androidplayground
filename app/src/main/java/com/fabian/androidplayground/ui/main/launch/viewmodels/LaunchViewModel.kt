@@ -20,20 +20,8 @@ class LaunchViewModel : ViewModel() {
     fun onClick(view : View) {
         viewModelScope.launch {
             when (view.id) {
-                R.id.picsumButton -> {
-                    navigationInstructions.emit(NavInstructions(R.id.lorem_picsum_nav_graph))
-                }
                 R.id.picsumRoomButton -> {
                     navigationInstructions.emit(NavInstructions(R.id.lorem_picsum_room_nav_graph))
-                }
-                R.id.finnhubButton -> {
-                    navigationInstructions.emit(NavInstructions(R.id.finnhub_nav_graph))
-                }
-                R.id.tensorFlowButton -> {
-                    navigationInstructions.emit(NavInstructions(R.id.tensorflow_nav_graph))
-                }
-                R.id.clickableLayout -> {
-                    Toast.makeText(view.context, "Clicked on layout", Toast.LENGTH_SHORT).show()
                 }
             }
         }

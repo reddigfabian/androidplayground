@@ -3,14 +3,11 @@ package com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.api.picsum.LoremPicsumPagingSource
 import com.fabian.androidplayground.api.picsum.LoremPicsumRemoteMediator
 import com.fabian.androidplayground.api.picsum.Picsum
 import com.fabian.androidplayground.common.navigation.NavInstructions
 import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
-import com.fabian.androidplayground.common.recyclerview.ItemClickVMProviderPagingAdapter
 import com.fabian.androidplayground.db.lorempicsum.LoremPicsumDatabase
-import com.fabian.androidplayground.ui.main.picsum.detail.views.LoremPicsumDetailFragmentArgs
 import com.fabian.androidplayground.ui.main.picsumroom.detail.views.LoremPicsumRoomDetailFragmentArgs
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +19,7 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @FlowPreview
 class LoremPicsumRoomListViewModel private constructor(private val db : LoremPicsumDatabase): ViewModel(),
-    ItemClickVMProviderPagingAdapter.ItemClickListener<Picsum> {
+    ItemClickPagingAdapter.ItemClickListener<Picsum> {
 
     class Factory(private val db : LoremPicsumDatabase) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
@@ -77,7 +74,7 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
     override fun onItemLongClick(item: Picsum) {
         viewModelScope.launch(IO) {
             db.getPicsumDao().delete(item)
-            db.getRepoDao().delete(item.index)
+            db.getRepoDao().delete(item.id)
         }
     }
 

@@ -19,8 +19,6 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
         private const val DEFAULT_PAGE_INDEX = 1
     }
 
-    var i = 0
-
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Picsum>): MediatorResult {
         if (loadType != LoadType.PREPEND) Log.d(TAG, "=================================== STARTING LOAD ===================================")
         return try {
@@ -55,7 +53,6 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
             db.withTransaction {
                 // if refreshing, clear table and start over
                 if (loadType == LoadType.REFRESH) {
-                    i = 0
                     db.getRepoDao().clearRemoteKeys()
                     db.getPicsumDao().clearAll()
                 }
@@ -63,10 +60,7 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
                 val prevKey = if (page == DEFAULT_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
                 val keys = response.map {
-                    it.index = i
-                    it.page = page
-                    i++
-                    RemoteKeys(repoIndex = it.index, prevKey = prevKey, nextKey = nextKey)
+                    RemoteKeys(repoIndex = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
 
                 db.getRepoDao().insertAll(keys)
@@ -87,7 +81,7 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
         Log.d(TAG, "getLastRemoteKey: lastItem = ${state.lastItemOrNull()}")
         val let = state.lastItemOrNull()?.let { picsum ->
             db.withTransaction {
-                db.getRepoDao().remoteKeysPicsumID(picsum.index)
+                db.getRepoDao().remoteKeysPicsumID(picsum.id)
             }
         }
         Log.d(TAG, "getLastRemoteKey: $let")
@@ -98,7 +92,7 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
         Log.d(TAG, "getClosestRemoteKey: anchorPosition = ${state.anchorPosition}")
         val let = state.anchorPosition?.let { position ->
             Log.d(TAG, "getClosestRemoteKey: closestItem = ${state.closestItemToPosition(position)}")
-            state.closestItemToPosition(position)?.index?.let { index ->
+            state.closestItemToPosition(position)?.id?.let { index ->
                 db.withTransaction { db.getRepoDao().remoteKeysPicsumID(index) }
             }
         }

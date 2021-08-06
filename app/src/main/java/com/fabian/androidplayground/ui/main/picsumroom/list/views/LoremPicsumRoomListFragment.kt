@@ -67,7 +67,7 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
     }
 
     private fun setupRecycler() {
-        loremPicsumListAdapter = LoremPicsumRoomListAdapter(viewLifecycleOwner, this)
+        loremPicsumListAdapter = LoremPicsumRoomListAdapter()
         loremPicsumListAdapter.addItemClickListener(loremPicsumRoomListViewModel)
 
         context?.let { nonNullContext ->
