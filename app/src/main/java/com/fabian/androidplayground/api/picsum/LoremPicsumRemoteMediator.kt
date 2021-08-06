@@ -35,8 +35,8 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
                 }
                 LoadType.APPEND -> {
                     Log.d(TAG, "LoadType : APPEND")
-                    val remoteKeys = getLastRemoteKey(state)
-                    remoteKeys?.nextKey ?: 2
+                    val remoteKeys = getLastRemoteKey(state) ?: return MediatorResult.Success(false)
+                    remoteKeys.nextKey ?: 2
                 }
             }
             Log.d(TAG, "Page: $page")

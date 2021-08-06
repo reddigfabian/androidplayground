@@ -60,7 +60,6 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
 
     val pagingData = Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = pagingSourceFactory, remoteMediator = LoremPicsumRemoteMediator(db)).flow
         .cachedIn(viewModelScope)
-        .asLiveData()
 
     val swipeRefreshing = MutableLiveData(false)
 
@@ -78,6 +77,7 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
     override fun onItemLongClick(item: Picsum) {
         viewModelScope.launch(IO) {
             db.getPicsumDao().delete(item)
+            db.getRepoDao().delete(item.id)
         }
     }
 

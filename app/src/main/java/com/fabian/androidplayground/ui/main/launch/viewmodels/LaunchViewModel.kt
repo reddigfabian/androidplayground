@@ -1,6 +1,7 @@
 package com.fabian.androidplayground.ui.main.launch.viewmodels
 
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fabian.androidplayground.R
@@ -30,6 +31,9 @@ class LaunchViewModel : ViewModel() {
                 }
                 R.id.tensorFlowButton -> {
                     navigationInstructions.emit(NavInstructions(R.id.tensorflow_nav_graph))
+                }
+                R.id.clickableLayout -> {
+                    Toast.makeText(view.context, "Clicked on layout", Toast.LENGTH_SHORT).show()
                 }
             }
         }

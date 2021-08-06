@@ -30,7 +30,6 @@
                 android:layout_height="match_parent"
                 android:id="@+id/mainListRecycler"
                 android:orientation="vertical"
-                android:scrollbars="vertical"
                 app:isVisibleGone="@{!loremPicsumListViewModel.isEmptyLiveData()}"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

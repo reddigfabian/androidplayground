@@ -3,9 +3,14 @@ package com.fabian.androidplayground.db.lorempicsum
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.fabian.androidplayground.api.picsum.Picsum
+import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
+
 
 @Dao
 interface PicsumDAO {
+    @Query("SELECT * FROM picsum WHERE id = :id")
+    fun getPicsumFlow(id: String?): Flow<Picsum?>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(picsum : Picsum)
     @Insert(onConflict = OnConflictStrategy.REPLACE)

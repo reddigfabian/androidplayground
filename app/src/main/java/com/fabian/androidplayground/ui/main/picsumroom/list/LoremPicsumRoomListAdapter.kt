@@ -26,7 +26,9 @@ class LoremPicsumRoomListAdapter(private val lifecycleOwner: LifecycleOwner, vie
     override fun onBindViewHolder(holder: BindingViewHolder, position: Int) {
         getItem(position)?.let { picsum ->
             (holder.binding as? ItemLoremPicsumRoomListBinding)?.let { itemMainListBinding ->
-                val item = provideViewModelItem<LoremPicsumRoomItemViewModel>(picsum.id, picsum)
+                val item = LoremPicsumRoomItemViewModel()
+                item.setData(picsum)
+//                val item = provideViewModelItem<LoremPicsumRoomItemViewModel>(picsum.id, picsum)
                 item.toRecyclerItem().bind(holder.binding)
                 holder.lifecycle.addObserver(item)
                 itemMainListBinding.loremPicsumListItemRoot.setOnClickListener { notifyListenersOfClick(picsum) }

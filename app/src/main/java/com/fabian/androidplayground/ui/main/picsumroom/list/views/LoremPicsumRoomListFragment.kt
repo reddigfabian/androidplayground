@@ -27,8 +27,10 @@ import com.fabian.androidplayground.databinding.FragmentLoremPicsumRoomListBindi
 import com.fabian.androidplayground.db.lorempicsum.LoremPicsumDatabase
 import com.fabian.androidplayground.ui.main.picsumroom.list.LoremPicsumRoomListAdapter
 import com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels.LoremPicsumRoomListViewModel
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -109,9 +111,12 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
 //        binding.mainListRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
         binding.mainListRecycler.adapter = withLoadStateFooter
-        loremPicsumRoomListViewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
-            lifecycleScope.launch {
-                loremPicsumListAdapter.submitData(pagingData)
+
+        lifecycleScope.launch(IO) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loremPicsumRoomListViewModel.pagingData.collect {
+                    loremPicsumListAdapter.submitData(it)
+                }
             }
         }
     }

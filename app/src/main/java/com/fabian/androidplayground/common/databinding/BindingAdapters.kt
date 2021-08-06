@@ -29,8 +29,10 @@ fun playSpeed(animationView : LottieAnimationView, speed : Float) {
     animationView.speed = speed.toFloat()
 }
 
-@BindingAdapter(value = ["picsum", "picsumSize"], requireAll = true)
-fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double = 0.05) {
+const val THUMBNAIL_SIZE = 0.01
+
+@BindingAdapter(value = ["picsum", "picsumSize"], requireAll = false)
+fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double = THUMBNAIL_SIZE) {
     picsum?.let { pic ->
         view.heightRatio = pic.heightRatio
         val uri = Uri.parse(pic.download_url)
@@ -45,8 +47,12 @@ fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double
         val newUri = builder.build()
 
         view.load(newUri) {
+            if (sizePercent == THUMBNAIL_SIZE) {
+                memoryCacheKey(pic.id)
+            }
             crossfade(true)
             placeholder(ColorDrawable(Color.DKGRAY))
+            placeholderMemoryCacheKey(pic.id)
         }
     }
 }
