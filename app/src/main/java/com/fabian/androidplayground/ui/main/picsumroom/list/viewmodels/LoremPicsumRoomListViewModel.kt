@@ -77,7 +77,7 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
     override fun onItemLongClick(item: Picsum) {
         viewModelScope.launch(IO) {
             db.getPicsumDao().delete(item)
-            db.getRepoDao().delete(item.id)
+            db.getRepoDao().delete(item.index)
         }
     }
 

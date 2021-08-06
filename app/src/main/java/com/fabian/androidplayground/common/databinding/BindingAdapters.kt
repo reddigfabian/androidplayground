@@ -47,12 +47,7 @@ fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double
         val newUri = builder.build()
 
         view.load(newUri) {
-            if (sizePercent == THUMBNAIL_SIZE) {
-                memoryCacheKey(pic.id)
-            }
-            crossfade(true)
             placeholder(ColorDrawable(Color.DKGRAY))
-            placeholderMemoryCacheKey(pic.id)
         }
     }
 }

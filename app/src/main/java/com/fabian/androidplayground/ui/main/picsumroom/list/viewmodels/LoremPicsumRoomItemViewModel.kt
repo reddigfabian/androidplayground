@@ -12,9 +12,11 @@ import com.fabian.androidplayground.common.recyclerview.viewmodels.RecyclerItem
 class LoremPicsumRoomItemViewModel : ItemViewModel<Picsum>(), LifecycleObserver {
 
     val picsum = MutableLiveData<Picsum>()
+    val debug = MutableLiveData<String>()
 
     override fun setData(data: Picsum) {
         picsum.value = data
+        debug.value = "p${data.page} | i${data.index} | id${data.id}"
     }
 
 }

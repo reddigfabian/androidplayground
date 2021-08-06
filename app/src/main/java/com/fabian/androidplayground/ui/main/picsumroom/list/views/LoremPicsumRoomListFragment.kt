@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -90,30 +91,32 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
             binding.mainListRecycler.addItemDecoration(dividerItemDecorationV)
         }
 
-        val refreshStateAdapter = LoadStateAdapter(loremPicsumListAdapter)
-        val withLoadStateFooter = loremPicsumListAdapter.withLoadStateFooter(LoadStateAdapter(loremPicsumListAdapter))
-        withLoadStateFooter.addAdapter(0, refreshStateAdapter)
-        loremPicsumListAdapter.addLoadStateListener {
-            val refresh = it.refresh
-            if (loremPicsumRoomListViewModel.swipeRefreshing.value != true) {
-                refreshStateAdapter.loadState = refresh
-            } else {
-                if (refresh is LoadState.NotLoading) {
-                    loremPicsumRoomListViewModel.swipeRefreshing.value = false
-                }
-            }
-        }
+//        val refreshStateAdapter = LoadStateAdapter(loremPicsumListAdapter)
+//        val withLoadStateFooter = loremPicsumListAdapter.withLoadStateFooter(LoadStateAdapter(loremPicsumListAdapter))
+//        withLoadStateFooter.addAdapter(0, refreshStateAdapter)
+//        loremPicsumListAdapter.addLoadStateListener {
+//            val refresh = it.refresh
+//            if (loremPicsumRoomListViewModel.swipeRefreshing.value != true) {
+//                refreshStateAdapter.loadState = refresh
+//            } else {
+//                if (refresh is LoadState.NotLoading) {
+//                    loremPicsumRoomListViewModel.swipeRefreshing.value = false
+//                }
+//            }
+//        }
 
         loremPicsumRoomListViewModel.swipeRefreshing.observe(viewLifecycleOwner) {
-            loremPicsumListAdapter.refresh()
+            if (it) {
+                loremPicsumListAdapter.refresh()
+            }
         }
 
 //        binding.mainListRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
-        binding.mainListRecycler.adapter = withLoadStateFooter
+        binding.mainListRecycler.adapter = loremPicsumListAdapter
 
         lifecycleScope.launch(IO) {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 loremPicsumRoomListViewModel.pagingData.collect {
                     loremPicsumListAdapter.submitData(it)
                 }

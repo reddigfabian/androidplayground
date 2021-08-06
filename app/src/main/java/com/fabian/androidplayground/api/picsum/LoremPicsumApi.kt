@@ -50,7 +50,9 @@ interface LoremPicsumService{
 @Parcelize
 @Entity(tableName = "picsum")
 data class Picsum(
-    @PrimaryKey val id: String,
+    @PrimaryKey var index : Int = 0,
+    var page : Int = 0,
+    val id: String,
     val author: String,
     val width: Int,
     val height: Int,

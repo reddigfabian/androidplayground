@@ -22,6 +22,7 @@ abstract class LoremPicsumDatabase : RoomDatabase() {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
 
+//        private fun buildDatabase(context: Context) = Room.databaseBuilder(context.applicationContext, LoremPicsumDatabase::class.java, "LoremPicsum").build()
         private fun buildDatabase(context: Context) = Room.inMemoryDatabaseBuilder(context.applicationContext, LoremPicsumDatabase::class.java).build()
     }
 

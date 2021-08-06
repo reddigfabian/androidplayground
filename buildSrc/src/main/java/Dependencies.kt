@@ -14,9 +14,9 @@ object Versions {
 
     //AndroidX
     const val appCompat = "1.3.0"
-    const val paging = "3.0.0"
+    const val paging = "3.1.0-alpha03"
     const val navVersion = "2.3.5"
-    const val lifeCycleRuntime = "2.4.0-alpha02"
+    const val lifeCycleRuntime = "2.4.0-alpha03"
     const val kotlinxCoroutines = "1.5.1"
 
     //Room
