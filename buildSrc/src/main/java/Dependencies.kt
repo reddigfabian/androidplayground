@@ -20,7 +20,7 @@ object Versions {
     const val kotlinxCoroutines = "1.5.1"
 
     //Room
-    const val room = "2.3.0"
+    const val room = "2.4.0-alpha04"
     const val roomPaging = "2.4.0-alpha04"
 
     //Tensorflow
