@@ -1,5 +1,6 @@
 package com.fabian.androidplayground.ui.main.launch.views
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.*
@@ -22,9 +23,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 import android.text.method.SingleLineTransformationMethod
+import android.text.util.Linkify
 import android.util.Log
+import android.view.MotionEvent
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.fabian.androidplayground.common.links.LinkMaker
+import kotlinx.android.synthetic.main.fragment_launch.*
 
 private const val TAG = "LaunchFragment"
 
@@ -37,6 +42,7 @@ class LaunchFragment : BaseDataBindingFragment<FragmentLaunchBinding>(R.layout.f
         binding.launchViewModel = launchViewModel
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){ //This will collect when started and cancel the coroutine when stopped
@@ -46,47 +52,74 @@ class LaunchFragment : BaseDataBindingFragment<FragmentLaunchBinding>(R.layout.f
             }
         }
 
-//        binding.linkTextView.highlightColor = ContextCompat.getColor(requireContext(), android.R.color.transparent)
-//        LinkMaker.addLinks(binding.linkTextView, LinkMaker.ALL)
-//        (binding.linkTextView.text as? SpannableString)?.let { spannable ->
-//            val urlSpans = mutableMapOf<URLSpan, IntRange>()
-//            spannable.getSpans(0, spannable.length, URLSpan::class.java).forEach {
-//                urlSpans[it] = spannable.getSpanStart(it) .. spannable.getSpanEnd(it)
-//            }
-//            Log.d(TAG, "$urlSpans")
-//
-//            var start = 0
-//            urlSpans.forEach {
-//                spannable.removeSpan(it.key)
-//                spannable.setSpan(ClickPassthroughSpan(), start, it.value.first, 0)
-//                spannable.setSpan(ConfirmURLSpan(it.key.url), it.value.first, it.value.last, 0)
-//                start = it.value.last
-//            }
-//            binding.linkTextView.text = spannable
-//        }
-//        binding.linkTextView.transformationMethod = SingleLineTransformationMethod()
+        val spannableText = (binding.linkTextView.text as? Spannable) ?: SpannableString(binding.linkTextView.text)
+        Linkify.addLinks(spannableText, Linkify.ALL)
+        try {
+            val spans = spannableText.getSpans(0, spannableText.length, URLSpan::class.java)
+            for (span in spans) {
+                val start = spannableText.getSpanStart(span)
+                val end = spannableText.getSpanEnd(span)
+                spannableText.removeSpan(span)
+                spannableText.setSpan(ConfirmURLSpan(span.url), start, end, 0)
+            }
+            binding.linkTextView.text = spannableText
+        } catch (ex : Exception) {
+            Log.e(TAG, "String : ${binding.linkTextView.text}", ex)
+        }
+
+        binding.linkTextView.setOnTouchListener { v, event ->
+            (v as? TextView)?.let { textView ->
+
+                val action = event.action
+
+                if (action == MotionEvent.ACTION_UP || action  == MotionEvent.ACTION_DOWN) {
+                    var x = event.x
+                    var y = event.y
+                    x -= textView.totalPaddingLeft
+                    y -= textView.totalPaddingTop
+
+                    x += textView.scrollX
+                    y += textView.scrollY
+
+                    val layout = textView.layout
+                    val lineForVertical = layout.getLineForVertical(y.toInt())
+                    val offsetForHorizontal = layout.getOffsetForHorizontal(lineForVertical, x)
+
+                    val text = textView.text
+                    val buffer = (textView.text as? Spannable) ?: SpannableString(text)
+                    val links = buffer.getSpans(
+                        offsetForHorizontal,
+                        offsetForHorizontal,
+                        URLSpan::class.java
+                    )
+                    if (links.isNotEmpty()) {
+                        if (action == MotionEvent.ACTION_UP) {
+                            links[0].onClick(textView)
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            } ?: kotlin.run {
+                false
+            }
+        }
+        binding.clickableLayout.visibility = View.VISIBLE
+
     }
 
-//    class ClickPassthroughSpan : ClickableSpan() {
-//        override fun onClick(view: View) {
-//            (view.parent as View).performClick()
-//        }
-//
-//        override fun updateDrawState(ds: TextPaint) {
-//            ds.color = ds.color
-//            ds.isUnderlineText = false
-//        }
-//    }
-//
-//    class ConfirmURLSpan(url : String) : URLSpan(url) {
-//        override fun onClick(view: View) {
-//            AlertDialog.Builder(view.context)
-//                .setMessage("Yo dawg, you sure?")
-//                .setPositiveButton("I like danger") { _, _ ->
-//                    super.onClick(view)
-//                }
-//                .show()
-//        }
-//    }
+    class ConfirmURLSpan(url : String) : URLSpan(url) {
+        override fun onClick(view: View) {
+            AlertDialog.Builder(view.context)
+                .setMessage("Yo dawg, you sure?")
+                .setPositiveButton("I like danger") { _, _ ->
+                    super.onClick(view)
+                }
+                .show()
+        }
+    }
 
 }
