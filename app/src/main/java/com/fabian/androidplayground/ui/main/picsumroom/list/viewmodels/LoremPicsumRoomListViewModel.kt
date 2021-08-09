@@ -2,6 +2,7 @@ package com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels
 
 import androidx.lifecycle.*
 import androidx.paging.*
+import androidx.room.withTransaction
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.LoremPicsumRemoteMediator
 import com.fabian.androidplayground.api.picsum.Picsum
@@ -35,25 +36,9 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
     private val filterItems = MutableStateFlow(mutableListOf<Picsum>())
     val isEmptyLiveData = MutableLiveData(false)
 
-    var pagingSource : PagingSource<Int, Picsum>? = null
-
-    val pagingSourceFactory = InvalidatingPagingSourceFactory {
+    private val pagingSourceFactory = InvalidatingPagingSourceFactory {
         db.getPicsumDao().pagingSource()
     }
-
-    val clearStateFlow = MutableStateFlow(false)
-
-//    val pagingData = clearStateFlow.transformLatest {
-//        emit(PagingData.empty())
-//        emitAll(Pager(config = PagingConfig(PAGE_SIZE, PAGE_SIZE*3), pagingSourceFactory = pagingSourceFactory).flow)
-//    }
-//        .cachedIn(viewModelScope)
-//        .combine(filterItems) { pagingData, filteredItems ->
-//            pagingData.filter {
-//                !filteredItems.contains(it)
-//            }
-//        }
-//        .asLiveData()
 
     val pagingData = Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = pagingSourceFactory, remoteMediator = LoremPicsumRemoteMediator(db)).flow
         .cachedIn(viewModelScope)
@@ -71,10 +56,12 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
         }
     }
 
-    override fun onItemLongClick(item: Picsum) {
+    override fun onItemLongClick(pic: Picsum) {
         viewModelScope.launch(IO) {
-            db.getPicsumDao().delete(item)
-            db.getRepoDao().delete(item.id)
+            db.withTransaction {
+                db.getPicsumDao().delete(pic)
+                db.getRemoteKeysDao().delete(pic.id)
+            }
         }
     }
 

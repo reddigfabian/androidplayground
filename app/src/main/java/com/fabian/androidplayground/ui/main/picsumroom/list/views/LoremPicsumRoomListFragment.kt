@@ -56,6 +56,16 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
         setupRecycler()
     }
 
+    override fun onStart() {
+        super.onStart()
+        loremPicsumListAdapter.addItemClickListener(loremPicsumRoomListViewModel)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        loremPicsumListAdapter.removeItemClickListener(loremPicsumRoomListViewModel)
+    }
+
     private fun setupNavigation() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){ //This will collect when started and cancel the coroutine when stopped
@@ -68,7 +78,6 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
 
     private fun setupRecycler() {
         loremPicsumListAdapter = LoremPicsumRoomListAdapter()
-        loremPicsumListAdapter.addItemClickListener(loremPicsumRoomListViewModel)
 
         context?.let { nonNullContext ->
             val gradientDrawable = GradientDrawable()
@@ -91,19 +100,19 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
             binding.mainListRecycler.addItemDecoration(dividerItemDecorationV)
         }
 
-//        val refreshStateAdapter = LoadStateAdapter(loremPicsumListAdapter)
-//        val withLoadStateFooter = loremPicsumListAdapter.withLoadStateFooter(LoadStateAdapter(loremPicsumListAdapter))
-//        withLoadStateFooter.addAdapter(0, refreshStateAdapter)
-//        loremPicsumListAdapter.addLoadStateListener {
-//            val refresh = it.refresh
-//            if (loremPicsumRoomListViewModel.swipeRefreshing.value != true) {
-//                refreshStateAdapter.loadState = refresh
-//            } else {
-//                if (refresh is LoadState.NotLoading) {
-//                    loremPicsumRoomListViewModel.swipeRefreshing.value = false
-//                }
-//            }
-//        }
+        val refreshStateAdapter = LoadStateAdapter(loremPicsumListAdapter)
+        val withLoadStateFooter = loremPicsumListAdapter.withLoadStateFooter(LoadStateAdapter(loremPicsumListAdapter))
+        withLoadStateFooter.addAdapter(0, refreshStateAdapter)
+        loremPicsumListAdapter.addLoadStateListener {
+            val refresh = it.refresh
+            if (loremPicsumRoomListViewModel.swipeRefreshing.value != true) {
+                refreshStateAdapter.loadState = refresh
+            } else {
+                if (refresh is LoadState.NotLoading) {
+                    loremPicsumRoomListViewModel.swipeRefreshing.value = false
+                }
+            }
+        }
 
         loremPicsumRoomListViewModel.swipeRefreshing.observe(viewLifecycleOwner) {
             if (it) {
@@ -122,28 +131,5 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menuRefresh -> {
-                loremPicsumListAdapter.refresh()
-            }
-            R.id.menuClear -> {
-                loremPicsumRoomListViewModel.clearStateFlow.value = !loremPicsumRoomListViewModel.clearStateFlow.value
-            }
-            R.id.menuInvalidateSource -> {
-                loremPicsumRoomListViewModel.pagingSource?.invalidate()
-            }
-            R.id.menuInvalidateFactory -> {
-                loremPicsumRoomListViewModel.pagingSourceFactory.invalidate()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

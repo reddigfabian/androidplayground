@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-private const val TAG = "LoremPicsumRoomDetailVi"
-
 class LoremPicsumRoomDetailViewModel private constructor(val picsum : Picsum, private val db : LoremPicsumDatabase) : ViewModel() {
 
     class Factory(private val picsum : Picsum, private val db : LoremPicsumDatabase) : ViewModelProvider.NewInstanceFactory() {
@@ -40,8 +38,7 @@ class LoremPicsumRoomDetailViewModel private constructor(val picsum : Picsum, pr
             viewModelScope.launch(IO) {
                 db.withTransaction {
                     db.getPicsumDao().delete(pic)
-                    db.getRepoDao().delete(pic.id)
-
+                    db.getRemoteKeysDao().delete(pic.id)
                 }
             }
         }

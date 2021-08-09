@@ -22,7 +22,6 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Picsum>): MediatorResult {
         if (loadType != LoadType.PREPEND) Log.d(TAG, "=================================== STARTING LOAD ===================================")
         return try {
-            // calculate the current page to load depending on the state
             val page = when (loadType) {
                 LoadType.REFRESH -> {
                     Log.d(TAG, "LoadType : REFRESH")
@@ -40,34 +39,26 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
             }
             Log.d(TAG, "Page: $page")
 
-            // load the list of items from API using calculated current page.
-            // make sure the sort of the remote data and local data is the same!
-            val response = LoremPicsumApi.loremPicsumService.imageList(
-                limit = state.config.pageSize,
-                page = page
-            )
-
-            // add custom logic, if you have some API metadata, you can use it as well
+            val response = LoremPicsumApi.loremPicsumService.imageList(state.config.pageSize, page)
             val endOfPaginationReached = response.size < state.config.pageSize
 
             db.withTransaction {
-                // if refreshing, clear table and start over
                 if (loadType == LoadType.REFRESH) {
-                    db.getRepoDao().clearRemoteKeys()
+                    db.getRemoteKeysDao().clearRemoteKeys()
                     db.getPicsumDao().clearAll()
                 }
 
                 val prevKey = if (page == DEFAULT_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
                 val keys = response.map {
-                    RemoteKeys(repoIndex = it.id, prevKey = prevKey, nextKey = nextKey)
+                    RemoteKeys(it.id, prevKey, nextKey)
                 }
 
-                db.getRepoDao().insertAll(keys)
+                db.getRemoteKeysDao().insertAll(keys)
                 db.getPicsumDao().insertAll(response)
             }
 
-            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+            MediatorResult.Success(endOfPaginationReached)
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
@@ -81,7 +72,7 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
         Log.d(TAG, "getLastRemoteKey: lastItem = ${state.lastItemOrNull()}")
         val let = state.lastItemOrNull()?.let { picsum ->
             db.withTransaction {
-                db.getRepoDao().remoteKeysPicsumID(picsum.id)
+                db.getRemoteKeysDao().remoteKeysPicsumID(picsum.id)
             }
         }
         Log.d(TAG, "getLastRemoteKey: $let")
@@ -93,7 +84,7 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
         val let = state.anchorPosition?.let { position ->
             Log.d(TAG, "getClosestRemoteKey: closestItem = ${state.closestItemToPosition(position)}")
             state.closestItemToPosition(position)?.id?.let { index ->
-                db.withTransaction { db.getRepoDao().remoteKeysPicsumID(index) }
+                db.withTransaction { db.getRemoteKeysDao().remoteKeysPicsumID(index) }
             }
         }
         Log.d(TAG, "getClosestRemoteKey: $let")
