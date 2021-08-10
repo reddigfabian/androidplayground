@@ -34,31 +34,33 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
                 LoadType.APPEND -> {
                     Log.d(TAG, "LoadType : APPEND")
                     val remoteKeys = getLastRemoteKey(state) ?: return MediatorResult.Success(false)
-                    remoteKeys.nextKey ?: 2
+                    remoteKeys.nextKey ?: 0
                 }
             }
             Log.d(TAG, "Page: $page")
+            var endOfPaginationReached = false
+            if (page > 0) {
+                val response = LoremPicsumApi.loremPicsumService.imageList(state.config.pageSize, page)
+                endOfPaginationReached = response.size < state.config.pageSize
 
-            val response = LoremPicsumApi.loremPicsumService.imageList(state.config.pageSize, page)
-            val endOfPaginationReached = response.size < state.config.pageSize
+                db.withTransaction {
+                    if (loadType == LoadType.REFRESH) {
+                        db.getRemoteKeysDao().clearRemoteKeys()
+                        db.getPicsumDao().clearAll()
+                    }
 
-            db.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    db.getRemoteKeysDao().clearRemoteKeys()
-                    db.getPicsumDao().clearAll()
+                    val prevKey = if (page == DEFAULT_PAGE_INDEX) null else page - 1
+                    val nextKey = if (endOfPaginationReached) null else page + 1
+                    val keys = response.map {
+                        RemoteKeys(it.id, prevKey, nextKey)
+                    }
+
+                    db.getRemoteKeysDao().insertAll(keys)
+                    db.getPicsumDao().insertAll(response)
                 }
-
-                val prevKey = if (page == DEFAULT_PAGE_INDEX) null else page - 1
-                val nextKey = if (endOfPaginationReached) null else page + 1
-                val keys = response.map {
-                    RemoteKeys(it.id, prevKey, nextKey)
-                }
-
-                db.getRemoteKeysDao().insertAll(keys)
-                db.getPicsumDao().insertAll(response)
             }
-
             MediatorResult.Success(endOfPaginationReached)
+
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
