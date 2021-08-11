@@ -61,6 +61,7 @@ class LoremPicsumListFragment : BaseDataBindingFragment<FragmentLoremPicsumListB
     private fun setupRecycler() {
         loremPicsumListAdapter = LoremPicsumListAdapter(viewLifecycleOwner, this)
         loremPicsumListAdapter.addItemClickListener(loremPicsumListViewModel)
+        viewLifecycleOwner.lifecycle.addObserver(loremPicsumListAdapter)
 
         context?.let { nonNullContext ->
             val gradientDrawable = GradientDrawable()

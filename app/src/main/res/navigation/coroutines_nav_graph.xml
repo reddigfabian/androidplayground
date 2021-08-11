@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coroutines_nav_graph"
+    app:startDestination="@id/CoroutinesFragment">
+    <fragment
+        android:id="@+id/CoroutinesFragment"
+        android:name="com.fabian.androidplayground.ui.main.coroutines.views.CoroutinesFragment"
+        tools:layout="@layout/fragment_coroutines">
+    </fragment>
+</navigation>

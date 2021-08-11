@@ -42,7 +42,6 @@ class LaunchFragment : BaseDataBindingFragment<FragmentLaunchBinding>(R.layout.f
         binding.launchViewModel = launchViewModel
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){ //This will collect when started and cancel the coroutine when stopped
@@ -52,6 +51,11 @@ class LaunchFragment : BaseDataBindingFragment<FragmentLaunchBinding>(R.layout.f
             }
         }
 
+//        linkifyText()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun linkifyText() {
         val spannableText = (binding.linkTextView.text as? Spannable) ?: SpannableString(binding.linkTextView.text)
         Linkify.addLinks(spannableText, Linkify.ALL)
         try {
@@ -108,7 +112,6 @@ class LaunchFragment : BaseDataBindingFragment<FragmentLaunchBinding>(R.layout.f
             }
         }
         binding.clickableLayout.visibility = View.VISIBLE
-
     }
 
     class ConfirmURLSpan(url : String) : URLSpan(url) {

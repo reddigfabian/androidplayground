@@ -63,11 +63,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/finnhubButton"
-            app:layout_constraintBottom_toTopOf="@id/clickableLayout"
+            app:layout_constraintBottom_toTopOf="@id/coroutinesButton"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="@string/tensorflow"
             android:textAllCaps="false"
             android:onClick="@{launchViewModel::onClick}"/>
+
+        <Button
+            android:id="@+id/coroutinesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tensorFlowButton"
+            app:layout_constraintBottom_toTopOf="@id/flowsButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/coroutines"
+            android:textAllCaps="false"
+            android:onClick="@{launchViewModel::onClick}"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/flowsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coroutinesButton"
+            app:layout_constraintBottom_toTopOf="@id/clickableLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/flows"
+            android:textAllCaps="false"
+            android:onClick="@{launchViewModel::onClick}"
+            android:visibility="visible"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clickableLayout"
@@ -76,7 +106,7 @@
             android:minWidth="250dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tensorFlowButton"
+            app:layout_constraintTop_toBottomOf="@id/flowsButton"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/purple_200"
             android:layout_marginVertical="8dp"

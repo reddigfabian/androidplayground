@@ -13,6 +13,10 @@
         app:graph="@navigation/finnhub_nav_graph" />
     <include
         app:graph="@navigation/tensorflow_nav_graph" />
+    <include
+        app:graph="@navigation/coroutines_nav_graph" />
+    <include
+        app:graph="@navigation/flows_nav_graph" />
 
     <fragment
         android:id="@+id/LaunchFragment"
@@ -30,5 +34,11 @@
         <action
             android:id="@+id/action_launch_to_tensorflow"
             app:destination="@id/tensorflow_nav_graph"/>
+        <action
+            android:id="@+id/action_launch_to_coroutines"
+            app:destination="@id/coroutines_nav_graph"/>
+        <action
+            android:id="@+id/action_launch_to_flows"
+            app:destination="@id/flows_nav_graph"/>
     </fragment>
 </navigation>

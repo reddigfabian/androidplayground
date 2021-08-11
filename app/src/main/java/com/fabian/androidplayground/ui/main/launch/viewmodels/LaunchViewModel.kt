@@ -32,6 +32,12 @@ class LaunchViewModel : ViewModel() {
                 R.id.tensorFlowButton -> {
                     navigationInstructions.emit(NavInstructions(R.id.tensorflow_nav_graph))
                 }
+                R.id.coroutinesButton -> {
+                    navigationInstructions.emit(NavInstructions(R.id.coroutines_nav_graph))
+                }
+                R.id.flowsButton -> {
+                    navigationInstructions.emit(NavInstructions(R.id.flows_nav_graph))
+                }
                 R.id.clickableLayout -> {
                     Toast.makeText(view.context, "Clicked on layout", Toast.LENGTH_SHORT).show()
                 }
