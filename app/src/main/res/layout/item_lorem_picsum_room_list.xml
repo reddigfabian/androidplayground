@@ -12,10 +12,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/loremPicsumListItemRoot"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <com.fabian.androidplayground.common.views.DynamicHeightImageView
-            android:id="@+id/mainListItemImage"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mainListItemCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:layout_width="400dp"
@@ -23,11 +23,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
-            app:picsum="@{picsum}"
-            android:foreground="?attr/selectableItemBackground"
-            tools:src="@drawable/ic_launcher_foreground"
-            tools:background="@drawable/ic_launcher_background"/>
+            android:transitionName="@{String.format(`card %s`, picsum.id)}"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="8dp"
+            android:background="@color/white">
+            <com.fabian.androidplayground.common.views.DynamicHeightImageView
+                android:id="@+id/mainListItemImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                app:picsum="@{picsum}"
+                android:foreground="?attr/selectableItemBackground"
+                tools:src="@drawable/ic_launcher_foreground"
+                tools:background="@drawable/ic_launcher_background"/>
+        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
