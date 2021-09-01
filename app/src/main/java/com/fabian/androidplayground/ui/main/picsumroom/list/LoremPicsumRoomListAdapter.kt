@@ -22,8 +22,8 @@ class LoremPicsumRoomListAdapter : ItemClickPagingAdapter<Picsum>(ITEM_COMPARATO
         getItem(position)?.let { picsum ->
             (holder.binding as? ItemLoremPicsumRoomListBinding)?.let { itemMainListBinding ->
                 picsum.toRecyclerItem().bind(holder.binding)
-                itemMainListBinding.loremPicsumListItemRoot.setOnClickListener { notifyListenersOfClick(picsum) }
-                itemMainListBinding.loremPicsumListItemRoot.setOnLongClickListener { notifyListenersOfLongClick(picsum) }
+                itemMainListBinding.mainListItemCard.setOnClickListener { v -> notifyListenersOfClick(picsum, v) }
+                itemMainListBinding.mainListItemCard.setOnLongClickListener { v -> notifyListenersOfLongClick(picsum, v) }
                 itemMainListBinding.executePendingBindings()
             }
         }

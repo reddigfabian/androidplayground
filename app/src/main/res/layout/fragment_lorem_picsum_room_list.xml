@@ -11,8 +11,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.main.picsum.list.views.AudioFragment">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/mainSwipeRefresh"
@@ -26,11 +25,16 @@
             app:onRefreshListener="@{() -> loremPicsumListViewModel.onSwipeRefresh()}">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mainListRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/mainListRecycler"
                 android:orientation="vertical"
-                app:isVisibleGone="@{!loremPicsumListViewModel.isEmptyLiveData()}"/>
+                app:isVisibleGone="@{!loremPicsumListViewModel.isEmptyLiveData()}"
+                android:padding="2dp"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_lorem_picsum_room_list"
+                android:transitionGroup="true"
+                android:clipChildren="false"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

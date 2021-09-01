@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="placeholder_bg_border">#FFFFFFFF</color>
     <color name="placeholder_bg">#10FFFFFF</color>
+    <color name="text_color_disabled">#FFCCCCCC</color>
 </resources>

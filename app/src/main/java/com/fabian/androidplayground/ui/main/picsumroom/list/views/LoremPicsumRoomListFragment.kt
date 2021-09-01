@@ -1,13 +1,8 @@
 package com.fabian.androidplayground.ui.main.picsumroom.list.views
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,23 +10,21 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
 import com.fabian.androidplayground.common.recyclerview.LoadStateAdapter
-import com.fabian.androidplayground.common.utils.UIUtils
 import com.fabian.androidplayground.databinding.FragmentLoremPicsumRoomListBinding
 import com.fabian.androidplayground.db.lorempicsum.LoremPicsumDatabase
 import com.fabian.androidplayground.ui.main.picsumroom.list.LoremPicsumRoomListAdapter
 import com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels.LoremPicsumRoomListViewModel
+import com.google.android.material.transition.MaterialFadeThrough
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -51,9 +44,11 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
+        postponeEnterTransition()
+        exitTransition = MaterialFadeThrough()
+        reenterTransition = MaterialFadeThrough()
         setupNavigation()
-        setupRecycler()
+        setupRecycler(view)
     }
 
     override fun onStart() {
@@ -67,7 +62,7 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
     }
 
     private fun setupNavigation() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){ //This will collect when started and cancel the coroutine when stopped
                 loremPicsumRoomListViewModel.navigationInstructions.collectLatest {
                     findNavController().executeNavInstructions(it)
@@ -76,29 +71,8 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
         }
     }
 
-    private fun setupRecycler() {
+    private fun setupRecycler(view : View) {
         loremPicsumListAdapter = LoremPicsumRoomListAdapter()
-
-        context?.let { nonNullContext ->
-            val gradientDrawable = GradientDrawable()
-            gradientDrawable.setColor(
-                ContextCompat.getColor(
-                    nonNullContext,
-                    android.R.color.transparent
-                )
-            )
-            val dpToPx = UIUtils.dpToPx(nonNullContext, 2.0f)
-            gradientDrawable.setSize(dpToPx, dpToPx)
-
-            val dividerItemDecorationV =
-                DividerItemDecoration(nonNullContext, DividerItemDecoration.VERTICAL)
-            val dividerItemDecorationH =
-                DividerItemDecoration(nonNullContext, DividerItemDecoration.HORIZONTAL)
-            dividerItemDecorationV.setDrawable(gradientDrawable)
-            dividerItemDecorationH.setDrawable(gradientDrawable)
-            binding.mainListRecycler.addItemDecoration(dividerItemDecorationH)
-            binding.mainListRecycler.addItemDecoration(dividerItemDecorationV)
-        }
 
         val refreshStateAdapter = LoadStateAdapter(loremPicsumListAdapter)
         val withLoadStateFooter = loremPicsumListAdapter.withLoadStateFooter(LoadStateAdapter(loremPicsumListAdapter))
@@ -112,6 +86,7 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
                     loremPicsumRoomListViewModel.swipeRefreshing.value = false
                 }
             }
+
         }
 
         loremPicsumRoomListViewModel.swipeRefreshing.observe(viewLifecycleOwner) {
@@ -120,13 +95,19 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
             }
         }
 
+        loremPicsumListAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
 //        binding.mainListRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
-        binding.mainListRecycler.adapter = loremPicsumListAdapter
+        binding.mainListRecycler.adapter = withLoadStateFooter
 
-        lifecycleScope.launch(IO) {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                loremPicsumRoomListViewModel.pagingData.collect {
+        loremPicsumListAdapter.addOnPagesUpdatedListener {
+            view.doOnPreDraw { startPostponedEnterTransition() }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch(IO) {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loremPicsumRoomListViewModel.pagingData.collectLatest {
                     loremPicsumListAdapter.submitData(it)
                 }
             }

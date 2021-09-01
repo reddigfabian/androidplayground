@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/LoremPicsumListFragment"
         android:name="com.fabian.androidplayground.ui.main.picsumroom.list.views.LoremPicsumRoomListFragment"
-        tools:layout="@layout/fragment_lorem_picsum_list">
+        tools:layout="@layout/fragment_lorem_picsum_room_list">
         <action
             android:id="@+id/action_list_to_detail"
             app:destination="@id/LoremPicsumDetailFragment" />
@@ -15,7 +15,7 @@
     <fragment
         android:id="@+id/LoremPicsumDetailFragment"
         android:name="com.fabian.androidplayground.ui.main.picsumroom.detail.views.LoremPicsumRoomDetailFragment"
-        tools:layout="@layout/fragment_lorem_picsum_detail">
+        tools:layout="@layout/fragment_lorem_picsum_room_detail">
         <argument
             android:name="picsum"
             app:argType="com.fabian.androidplayground.api.picsum.Picsum" />

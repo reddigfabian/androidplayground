@@ -1,6 +1,5 @@
 package com.fabian.androidplayground.ui.main.picsumroom.detail.viewmodels
 
-import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -33,7 +32,7 @@ class LoremPicsumRoomDetailViewModel private constructor(val picsum : Picsum, pr
         }
     }
 
-    fun onClick(view : View) {
+    fun deletePicsum() {
         picsum.let { pic ->
             viewModelScope.launch(IO) {
                 db.withTransaction {

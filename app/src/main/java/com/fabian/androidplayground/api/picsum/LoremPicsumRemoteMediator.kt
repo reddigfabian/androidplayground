@@ -58,15 +58,17 @@ class LoremPicsumRemoteMediator(private val db : LoremPicsumDatabase) : RemoteMe
                     db.getRemoteKeysDao().insertAll(keys)
                     db.getPicsumDao().insertAll(response)
                 }
+                Log.d(TAG, "loaded $page: $response")
             }
             MediatorResult.Success(endOfPaginationReached)
-
         } catch (e: IOException) {
+            if (loadType != LoadType.PREPEND) Log.e(TAG, "load: ", e)
             MediatorResult.Error(e)
         } catch (e: HttpException) {
+            if (loadType != LoadType.PREPEND) Log.e(TAG, "load: ", e)
             MediatorResult.Error(e)
         } finally {
-            Log.d(TAG, "=================================== FINISHED LOAD ===================================")
+            if (loadType != LoadType.PREPEND) Log.d(TAG, "=================================== FINISHED LOAD ===================================")
         }
     }
 
