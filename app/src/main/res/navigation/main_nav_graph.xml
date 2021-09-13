@@ -4,31 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/LaunchFragment">
-
-    <include
-        app:graph="@navigation/lorem_picsum_nav_graph" />
     <include
         app:graph="@navigation/lorem_picsum_room_nav_graph" />
-    <include
-        app:graph="@navigation/finnhub_nav_graph" />
-    <include
-        app:graph="@navigation/tensorflow_nav_graph" />
 
     <fragment
         android:id="@+id/LaunchFragment"
         android:name="com.fabian.androidplayground.ui.main.launch.views.LaunchFragment"
         tools:layout="@layout/fragment_launch">
         <action
-            android:id="@+id/action_launch_to_picsum"
-            app:destination="@id/lorem_picsum_nav_graph"/>
-        <action
             android:id="@+id/action_launch_to_picsum_room"
             app:destination="@id/lorem_picsum_room_nav_graph"/>
-        <action
-            android:id="@+id/action_launch_to_finnhub"
-            app:destination="@id/finnhub_nav_graph"/>
-        <action
-            android:id="@+id/action_launch_to_tensorflow"
-            app:destination="@id/tensorflow_nav_graph"/>
     </fragment>
 </navigation>

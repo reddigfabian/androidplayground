@@ -1,6 +1,11 @@
 package com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels
 
-import androidx.lifecycle.*
+import android.view.View
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.*
 import androidx.room.withTransaction
 import com.fabian.androidplayground.R
@@ -13,8 +18,9 @@ import com.fabian.androidplayground.ui.main.picsumroom.detail.views.LoremPicsumR
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import java.io.UncheckedIOException
 
 @ExperimentalPagingApi
 @ExperimentalCoroutinesApi
@@ -33,7 +39,6 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
 
     val navigationInstructions = MutableSharedFlow<NavInstructions>()
 
-    private val filterItems = MutableStateFlow(mutableListOf<Picsum>())
     val isEmptyLiveData = MutableLiveData(false)
 
     private val pagingSourceFactory = InvalidatingPagingSourceFactory {
@@ -47,20 +52,19 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
 
     fun onSwipeRefresh() {
         swipeRefreshing.value = true
-        filterItems.value.clear()
     }
 
-    override fun onItemClick(item: Picsum) {
+    override fun onItemClick(item: Picsum, view: View) {
         viewModelScope.launch {
-            navigationInstructions.emit(NavInstructions(R.id.LoremPicsumDetailFragment, LoremPicsumRoomDetailFragmentArgs(item).toBundle()))
+            navigationInstructions.emit(NavInstructions(navDestinationID = R.id.LoremPicsumDetailFragment, navArgs = LoremPicsumRoomDetailFragmentArgs(item).toBundle(), navigatorExtras = FragmentNavigatorExtras(view to "listToDetailImageCard")))
         }
     }
 
-    override fun onItemLongClick(pic: Picsum) {
+    override fun onItemLongClick(item: Picsum, view: View) {
         viewModelScope.launch(IO) {
             db.withTransaction {
-                db.getPicsumDao().delete(pic)
-                db.getRemoteKeysDao().delete(pic.id)
+                db.getPicsumDao().delete(item)
+                db.getRemoteKeysDao().delete(item.id)
             }
         }
     }

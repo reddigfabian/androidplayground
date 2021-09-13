@@ -9,10 +9,12 @@ import android.view.View
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
 import androidx.databinding.adapters.ListenerUtil
-import coil.load
 import com.airbnb.lottie.LottieAnimationView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.Picsum
+import com.fabian.androidplayground.common.glide.ThumbnailCrossFadeFactory
 import com.fabian.androidplayground.common.views.DynamicHeightImageView
 
 @BindingAdapter("lottie_play")
@@ -29,26 +31,60 @@ fun playSpeed(animationView : LottieAnimationView, speed : Float) {
     animationView.speed = speed.toFloat()
 }
 
-const val THUMBNAIL_SIZE = 0.01
+const val THUMBNAIL_SIZE_PERCENT = 0.1
 
 @BindingAdapter(value = ["picsum", "picsumSize"], requireAll = false)
-fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double = THUMBNAIL_SIZE) {
+fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double?) {
+    val sizePercentInternal = if (sizePercent == null || sizePercent == 0.0) {
+        THUMBNAIL_SIZE_PERCENT
+    } else {
+        sizePercent
+    }
+
     picsum?.let { pic ->
+        val isThumbnail = sizePercentInternal == THUMBNAIL_SIZE_PERCENT
         view.heightRatio = pic.heightRatio
         val uri = Uri.parse(pic.download_url)
-        val newPathSegments = uri.pathSegments.toMutableList()
-        newPathSegments[newPathSegments.lastIndex-1] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex - 1]) * sizePercent).toInt().toString()
-        newPathSegments[newPathSegments.lastIndex] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex]) * sizePercent).toInt().toString()
-
-        val builder = Uri.Builder().scheme(uri.scheme).authority(uri.authority)
-        newPathSegments.forEach {
-            builder.appendPath(it)
+        val uriPathSegments = uri.pathSegments
+        val thumbnailPathSegments = uriPathSegments.toMutableList()
+        thumbnailPathSegments[thumbnailPathSegments.lastIndex-1] = (Integer.valueOf(thumbnailPathSegments[thumbnailPathSegments.lastIndex - 1]) * THUMBNAIL_SIZE_PERCENT).toInt().toString()
+        thumbnailPathSegments[thumbnailPathSegments.lastIndex] = (Integer.valueOf(thumbnailPathSegments[thumbnailPathSegments.lastIndex]) * THUMBNAIL_SIZE_PERCENT).toInt().toString()
+        val thumbnailBuilder = Uri.Builder().scheme(uri.scheme).authority(uri.authority)
+        thumbnailPathSegments.forEach {
+            thumbnailBuilder.appendPath(it)
         }
-        val newUri = builder.build()
+        val thumbnailUri = thumbnailBuilder.build()
+        if (isThumbnail) {
+            Glide.with(view.context)
+                .load(thumbnailUri)
+                .placeholder(ColorDrawable(Color.DKGRAY))
+                .error(ColorDrawable(Color.RED))
+                .into(view)
+        } else {
+            val newPathSegments = uriPathSegments.toMutableList()
+            newPathSegments[newPathSegments.lastIndex-1] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex - 1]) * sizePercentInternal).toInt().toString()
+            newPathSegments[newPathSegments.lastIndex] = (Integer.valueOf(newPathSegments[newPathSegments.lastIndex]) * sizePercentInternal).toInt().toString()
+            val builder = Uri.Builder().scheme(uri.scheme).authority(uri.authority)
+            newPathSegments.forEach {
+                builder.appendPath(it)
+            }
+            val newUri = builder.build()
 
-        view.load(newUri) {
-            placeholder(ColorDrawable(Color.DKGRAY))
+            Glide.with(view.context)
+                .load(newUri)
+                .thumbnail(Glide
+                    .with(view.context)
+                    .load(thumbnailUri))
+                .error(ColorDrawable(Color.RED))
+                .transition(withCrossFade(ThumbnailCrossFadeFactory.Builder()))
+                .into(view)
         }
+
+        //Coil
+//        view.load(newUri) {
+//            placeholder(ColorDrawable(Color.DKGRAY))
+//            error(ColorDrawable(Color.RED))
+//        }
     }
 }
 

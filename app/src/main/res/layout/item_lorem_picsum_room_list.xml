@@ -35,7 +35,18 @@
                 app:picsum="@{picsum}"
                 android:foreground="?attr/selectableItemBackground"
                 tools:src="@drawable/ic_launcher_foreground"
-                tools:background="@drawable/ic_launcher_background"/>
+                tools:background="@drawable/ic_launcher_background"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/mainListItemURLText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="URL GOES HERE"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:text="@{picsum.download_url}"
+                android:visibility="invisible"/>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

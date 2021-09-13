@@ -32,7 +32,7 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
     @CallSuper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _viewDataBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         setDataBoundViewModels(binding)
         return binding.root
     }
