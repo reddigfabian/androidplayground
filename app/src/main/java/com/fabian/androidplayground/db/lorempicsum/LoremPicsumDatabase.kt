@@ -10,7 +10,7 @@ import com.fabian.androidplayground.db.common.RemoteKeysDao
 
 @Database(version = 1, entities = [Picsum::class, RemoteKeys::class], exportSchema = false)
 abstract class LoremPicsumDatabase : RoomDatabase() {
-    abstract fun getRepoDao(): RemoteKeysDao
+    abstract fun getRemoteKeysDao(): RemoteKeysDao
     abstract fun getPicsumDao(): PicsumDAO
 
     companion object {

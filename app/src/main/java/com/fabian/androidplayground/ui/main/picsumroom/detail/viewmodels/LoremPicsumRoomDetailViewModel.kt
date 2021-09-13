@@ -1,6 +1,5 @@
 package com.fabian.androidplayground.ui.main.picsumroom.detail.viewmodels
 
-import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -13,8 +12,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
-private const val TAG = "LoremPicsumRoomDetailVi"
 
 class LoremPicsumRoomDetailViewModel private constructor(val picsum : Picsum, private val db : LoremPicsumDatabase) : ViewModel() {
 
@@ -35,13 +32,12 @@ class LoremPicsumRoomDetailViewModel private constructor(val picsum : Picsum, pr
         }
     }
 
-    fun onClick(view : View) {
+    fun deletePicsum() {
         picsum.let { pic ->
             viewModelScope.launch(IO) {
                 db.withTransaction {
                     db.getPicsumDao().delete(pic)
-                    db.getRepoDao().delete(pic.index)
-
+                    db.getRemoteKeysDao().delete(pic.id)
                 }
             }
         }

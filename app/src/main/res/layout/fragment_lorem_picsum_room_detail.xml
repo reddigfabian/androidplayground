@@ -9,33 +9,67 @@
             type="com.fabian.androidplayground.ui.main.picsumroom.detail.viewmodels.LoremPicsumRoomDetailViewModel"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.picsum.detail.views.LaunchFragment">
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
-        <com.fabian.androidplayground.common.views.DynamicHeightImageView
-            android:id="@+id/detailImage"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
-            app:picsum="@{loremPicsumDetailViewModel.picsum}"
-            app:picsumSize="@{0.5}"
-            android:transitionName="listToDetailImage"/>
-
-        <Button
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detailRoot"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:text="@string/delete"
-            app:layout_constraintTop_toBottomOf="@id/detailImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
-            android:onClick="@{loremPicsumDetailViewModel::onClick}"/>
+            tools:context=".ui.main.picsum.detail.views.LaunchFragment"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/detailImageCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:transitionName="listToDetailImageCard"
+                app:cardElevation="8dp"
+                app:cardCornerRadius="0dp"
+                android:background="@color/white">
+                <com.fabian.androidplayground.common.views.DynamicHeightImageView
+                    android:id="@+id/detailImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:src="@drawable/ic_launcher_background"
+                    android:gravity="center"
+                    app:picsum="@{loremPicsumDetailViewModel.picsum}"
+                    app:picsumSize="@{1.0}"
+                    android:scaleType="fitXY"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/detailAuthorCard"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                app:layout_constraintTop_toBottomOf="@id/detailImageCard"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="2dp"
+                android:layout_marginEnd="16dp"
+                android:transformPivotY="0dp"
+                android:rotationX="-90"
+                tools:rotationX="0"
+                tools:visibility="visible"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/detailAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:padding="8dp"
+                    android:textColor="@color/text_color_disabled"
+                    android:text="@{loremPicsumDetailViewModel.picsum.author}"
+                    tools:text="Alejandro Escamilla"/>
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

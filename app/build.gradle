@@ -82,6 +82,8 @@ dependencies {
     implementation Dependencies.material
     implementation Dependencies.lottie
     implementation Dependencies.coil
+    implementation Dependencies.glide
+    annotationProcessor Dependencies.glideApt
     implementation Dependencies.swipeRefreshLayout
 
     //Networking

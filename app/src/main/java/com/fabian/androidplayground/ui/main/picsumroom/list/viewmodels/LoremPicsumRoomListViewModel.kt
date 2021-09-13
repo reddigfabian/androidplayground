@@ -1,28 +1,32 @@
 package com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels
 
-import androidx.lifecycle.*
+import android.view.View
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.*
+import androidx.room.withTransaction
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.api.picsum.LoremPicsumPagingSource
 import com.fabian.androidplayground.api.picsum.LoremPicsumRemoteMediator
 import com.fabian.androidplayground.api.picsum.Picsum
 import com.fabian.androidplayground.common.navigation.NavInstructions
 import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
-import com.fabian.androidplayground.common.recyclerview.ItemClickVMProviderPagingAdapter
 import com.fabian.androidplayground.db.lorempicsum.LoremPicsumDatabase
-import com.fabian.androidplayground.ui.main.picsum.detail.views.LoremPicsumDetailFragmentArgs
 import com.fabian.androidplayground.ui.main.picsumroom.detail.views.LoremPicsumRoomDetailFragmentArgs
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import java.io.UncheckedIOException
 
 @ExperimentalPagingApi
 @ExperimentalCoroutinesApi
 @FlowPreview
 class LoremPicsumRoomListViewModel private constructor(private val db : LoremPicsumDatabase): ViewModel(),
-    ItemClickVMProviderPagingAdapter.ItemClickListener<Picsum> {
+    ItemClickPagingAdapter.ItemClickListener<Picsum> {
 
     class Factory(private val db : LoremPicsumDatabase) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
@@ -35,28 +39,11 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
 
     val navigationInstructions = MutableSharedFlow<NavInstructions>()
 
-    private val filterItems = MutableStateFlow(mutableListOf<Picsum>())
     val isEmptyLiveData = MutableLiveData(false)
 
-    var pagingSource : PagingSource<Int, Picsum>? = null
-
-    val pagingSourceFactory = InvalidatingPagingSourceFactory {
+    private val pagingSourceFactory = InvalidatingPagingSourceFactory {
         db.getPicsumDao().pagingSource()
     }
-
-    val clearStateFlow = MutableStateFlow(false)
-
-//    val pagingData = clearStateFlow.transformLatest {
-//        emit(PagingData.empty())
-//        emitAll(Pager(config = PagingConfig(PAGE_SIZE, PAGE_SIZE*3), pagingSourceFactory = pagingSourceFactory).flow)
-//    }
-//        .cachedIn(viewModelScope)
-//        .combine(filterItems) { pagingData, filteredItems ->
-//            pagingData.filter {
-//                !filteredItems.contains(it)
-//            }
-//        }
-//        .asLiveData()
 
     val pagingData = Pager(config = PagingConfig(PAGE_SIZE), pagingSourceFactory = pagingSourceFactory, remoteMediator = LoremPicsumRemoteMediator(db)).flow
         .cachedIn(viewModelScope)
@@ -65,19 +52,20 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
 
     fun onSwipeRefresh() {
         swipeRefreshing.value = true
-        filterItems.value.clear()
     }
 
-    override fun onItemClick(item: Picsum) {
+    override fun onItemClick(item: Picsum, view: View) {
         viewModelScope.launch {
-            navigationInstructions.emit(NavInstructions(R.id.LoremPicsumDetailFragment, LoremPicsumRoomDetailFragmentArgs(item).toBundle()))
+            navigationInstructions.emit(NavInstructions(navDestinationID = R.id.LoremPicsumDetailFragment, navArgs = LoremPicsumRoomDetailFragmentArgs(item).toBundle(), navigatorExtras = FragmentNavigatorExtras(view to "listToDetailImageCard")))
         }
     }
 
-    override fun onItemLongClick(item: Picsum) {
+    override fun onItemLongClick(item: Picsum, view: View) {
         viewModelScope.launch(IO) {
-            db.getPicsumDao().delete(item)
-            db.getRepoDao().delete(item.index)
+            db.withTransaction {
+                db.getPicsumDao().delete(item)
+                db.getRemoteKeysDao().delete(item.id)
+            }
         }
     }
 
