@@ -13,6 +13,7 @@ import com.fabian.androidplayground.api.picsum.LoremPicsumRemoteMediator
 import com.fabian.androidplayground.api.picsum.Picsum
 import com.fabian.androidplayground.common.navigation.NavInstructions
 import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
+import com.fabian.androidplayground.common.recyclerview.views.ItemClickListener
 import com.fabian.androidplayground.db.lorempicsum.LoremPicsumDatabase
 import com.fabian.androidplayground.ui.main.picsumroom.detail.views.LoremPicsumRoomDetailFragmentArgs
 import kotlinx.coroutines.Dispatchers.IO
@@ -26,7 +27,7 @@ import java.io.UncheckedIOException
 @ExperimentalCoroutinesApi
 @FlowPreview
 class LoremPicsumRoomListViewModel private constructor(private val db : LoremPicsumDatabase): ViewModel(),
-    ItemClickPagingAdapter.ItemClickListener<Picsum> {
+    ItemClickListener<Picsum> {
 
     class Factory(private val db : LoremPicsumDatabase) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =

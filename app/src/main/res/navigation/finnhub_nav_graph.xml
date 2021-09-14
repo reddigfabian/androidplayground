@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/finnhub_nav_graph"
+    app:startDestination="@id/FinnhubListFragment">
+    <fragment
+        android:id="@+id/FinnhubListFragment"
+        android:name="com.fabian.androidplayground.ui.main.finnhub.list.views.FinnhubListFragment"
+        tools:layout="@layout/fragment_finnhub_list">
+        <action
+            android:id="@+id/action_list_to_detail"
+            app:destination="@id/FinnhubDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/FinnhubDetailFragment"
+        android:name="com.fabian.androidplayground.ui.main.finnhub.detail.views.FinnhubDetailFragment"
+        tools:layout="@layout/fragment_finnhub_detail">
+        <argument
+            android:name="finnhubStock"
+            app:argType="com.fabian.androidplayground.api.finnhub.FinnhubStockSymbol" />
+    </fragment>
+</navigation>

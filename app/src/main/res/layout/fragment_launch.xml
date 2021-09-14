@@ -82,7 +82,8 @@
             android:text="@string/coroutines"
             android:textAllCaps="false"
             android:onClick="@{launchViewModel::onClick}"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <Button
             android:id="@+id/flowsButton"
@@ -97,7 +98,8 @@
             android:text="@string/flows"
             android:textAllCaps="false"
             android:onClick="@{launchViewModel::onClick}"
-            android:visibility="visible"/>
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clickableLayout"
