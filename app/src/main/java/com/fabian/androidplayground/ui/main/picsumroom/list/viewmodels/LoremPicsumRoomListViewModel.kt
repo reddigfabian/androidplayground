@@ -1,6 +1,8 @@
 package com.fabian.androidplayground.ui.main.picsumroom.list.viewmodels
 
 import android.view.View
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,34 +13,32 @@ import androidx.room.withTransaction
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.picsum.LoremPicsumRemoteMediator
 import com.fabian.androidplayground.api.picsum.Picsum
-import com.fabian.androidplayground.common.navigation.NavInstructions
-import com.fabian.androidplayground.common.recyclerview.ItemClickPagingAdapter
+import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
+import com.fabian.androidplayground.common.navigation.NavToInstructions
 import com.fabian.androidplayground.common.recyclerview.views.ItemClickListener
 import com.fabian.androidplayground.db.lorempicsum.LoremPicsumDatabase
 import com.fabian.androidplayground.ui.main.picsumroom.detail.views.LoremPicsumRoomDetailFragmentArgs
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import java.io.UncheckedIOException
 
 @ExperimentalPagingApi
 @ExperimentalCoroutinesApi
 @FlowPreview
-class LoremPicsumRoomListViewModel private constructor(private val db : LoremPicsumDatabase): ViewModel(),
+class LoremPicsumRoomListViewModel private constructor(private val db : LoremPicsumDatabase, dataStore: DataStore<Preferences>): BaseFragmentViewModel(dataStore),
     ItemClickListener<Picsum> {
 
-    class Factory(private val db : LoremPicsumDatabase) : ViewModelProvider.NewInstanceFactory() {
+    override val TAG = "LoremPicsumRoomListViewModel"
+
+    class Factory(private val db: LoremPicsumDatabase, private val dataStore: DataStore<Preferences>) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            LoremPicsumRoomListViewModel(db) as T
+            LoremPicsumRoomListViewModel(db, dataStore) as T
     }
 
     companion object {
         private const val PAGE_SIZE = 30
     }
-
-    val navigationInstructions = MutableSharedFlow<NavInstructions>()
 
     val isEmptyLiveData = MutableLiveData(false)
 
@@ -57,7 +57,7 @@ class LoremPicsumRoomListViewModel private constructor(private val db : LoremPic
 
     override fun onItemClick(item: Picsum, view: View) {
         viewModelScope.launch {
-            navigationInstructions.emit(NavInstructions(navDestinationID = R.id.LoremPicsumDetailFragment, navArgs = LoremPicsumRoomDetailFragmentArgs(item).toBundle(), navigatorExtras = FragmentNavigatorExtras(view to "listToDetailImageCard")))
+            navigationInstructions.emit(NavToInstructions(navDestinationID = R.id.LoremPicsumDetailFragment, navArgs = LoremPicsumRoomDetailFragmentArgs(item).toBundle(), navigatorExtras = FragmentNavigatorExtras(view to "listToDetailImageCard")))
         }
     }
 

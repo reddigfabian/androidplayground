@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.adapters.ListenerUtil
 import com.airbnb.lottie.LottieAnimationView
@@ -86,6 +87,11 @@ fun picsum(view : DynamicHeightImageView, picsum : Picsum?, sizePercent : Double
 //            error(ColorDrawable(Color.RED))
 //        }
     }
+}
+
+@BindingAdapter("imageUri")
+fun imageUri(imageView : ImageView, uri : Uri) {
+    imageView.setImageURI(uri)
 }
 
 @BindingAdapter("isVisibleGone")

@@ -10,8 +10,8 @@ android {
     Properties localProperties = new Properties()
     localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
 
     aaptOptions {
         noCompress "tflite"
@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "com.fabian.androidplayground"
         minSdkVersion 28
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -67,6 +67,7 @@ dependencies {
     implementation Dependencies.kotlinxCoroutinesCore
     implementation Dependencies.kotlinxCoroutinesAndroid
     implementation Dependencies.kotlinxCoroutinesReactive
+    implementation Dependencies.datastorePreferences
 
     //Room
     implementation Dependencies.roomRuntime

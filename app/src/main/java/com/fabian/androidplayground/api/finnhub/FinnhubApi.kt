@@ -1,6 +1,7 @@
 package com.fabian.androidplayground.api.finnhub
 
 import android.os.Parcelable
+import androidx.lifecycle.MutableLiveData
 import com.fabian.androidplayground.BuildConfig
 import com.fabian.androidplayground.common.scarlet.FlowStreamAdapterFactory
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -121,6 +122,7 @@ data class FinnhubStockSymbol(
     val type: String
 ): Parcelable {
     var quote : SymbolQuote? = null
+    val stockName = "$description ($symbol)"
 }
 
 @Parcelize

@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
+import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
+import com.fabian.androidplayground.common.datastore.dataStore
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
 import com.fabian.androidplayground.common.recyclerview.LoadStateAdapter
 import com.fabian.androidplayground.common.utils.UIUtils
@@ -32,7 +34,9 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 class FinnhubListFragment : BaseDataBindingFragment<FragmentFinnhubListBinding>(R.layout.fragment_finnhub_list) {
 
-    private val finnhubListViewModel: FinnhubListViewModel by viewModels()
+    private val finnhubListViewModel: FinnhubListViewModel by viewModels {
+        FinnhubListViewModel.Factory(requireContext().dataStore)
+    }
     private lateinit var finnhubListAdapter : FinnhubListAdapter
 
     override fun setDataBoundViewModels(binding: FragmentFinnhubListBinding) {
@@ -127,5 +131,9 @@ class FinnhubListFragment : BaseDataBindingFragment<FragmentFinnhubListBinding>(
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun getViewModel(): BaseFragmentViewModel {
+        return finnhubListViewModel
     }
 }

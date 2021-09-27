@@ -27,9 +27,9 @@
             android:layout_marginEnd="8dp"
             android:padding="8dp"
             android:src="@{tensorFlowViewModel.drawable != null ? tensorFlowViewModel.drawable : @drawable/ic_launcher_foreground}"
-            android:background="@{tensorFlowViewModel.drawable != null ? null : @drawable/tensorflow_image_bg}"
+            android:background="@{tensorFlowViewModel.drawable != null ? null : @drawable/image_placeholder_bg}"
             tools:src="@drawable/ic_launcher_foreground"
-            tools:background="@drawable/tensorflow_image_bg"/>
+            tools:background="@drawable/image_placeholder_bg"/>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

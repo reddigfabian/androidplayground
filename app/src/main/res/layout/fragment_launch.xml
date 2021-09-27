@@ -14,6 +14,21 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.picsum.detail.views.LaunchFragment">
 
+        <TextView
+            android:id="@+id/greetingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/picsumButton"
+            android:text="@{launchViewModel.greetingString}"
+            tools:text="Greetings user"
+            android:gravity="center"
+            android:textAllCaps="false"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
         <Button
             android:id="@+id/picsumButton"
             android:layout_width="wrap_content"
@@ -21,7 +36,7 @@
             android:minWidth="250dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/greetingText"
             app:layout_constraintBottom_toTopOf="@id/picsumRoomButton"
             android:text="@string/lorem_picsum"
             android:onClick="@{launchViewModel::onClick}"
@@ -93,12 +108,60 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coroutinesButton"
-            app:layout_constraintBottom_toTopOf="@id/clickableLayout"
+            app:layout_constraintBottom_toTopOf="@id/fileIOButton"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="@string/flows"
             android:textAllCaps="false"
             android:onClick="@{launchViewModel::onClick}"
             android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <Button
+            android:id="@+id/fileIOButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flowsButton"
+            app:layout_constraintBottom_toTopOf="@id/changePasswordButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/file_io"
+            android:textAllCaps="false"
+            android:onClick="@{launchViewModel::onClick}"
+            android:visibility="visible"
+            tools:visibility="visible"/>
+
+        <Button
+            android:id="@+id/changePasswordButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fileIOButton"
+            app:layout_constraintBottom_toTopOf="@id/changeNameButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/choose_password"
+            android:textAllCaps="false"
+            android:onClick="@{launchViewModel::onClick}"
+            android:visibility="visible"
+            tools:visibility="visible"/>
+
+        <Button
+            android:id="@+id/changeNameButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/changePasswordButton"
+            app:layout_constraintBottom_toTopOf="@id/clickableLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/choose_name"
+            android:textAllCaps="false"
+            android:onClick="@{launchViewModel::onClick}"
+            android:visibility="visible"
             tools:visibility="visible"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,7 +171,7 @@
             android:minWidth="250dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/flowsButton"
+            app:layout_constraintTop_toBottomOf="@id/changeNameButton"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/purple_200"
             android:layout_marginVertical="8dp"

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
+import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
+import com.fabian.androidplayground.common.datastore.dataStore
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
 import com.fabian.androidplayground.common.recyclerview.LoadStateAdapter
 import com.fabian.androidplayground.databinding.FragmentLoremPicsumRoomListBinding
@@ -34,7 +36,7 @@ import kotlinx.coroutines.launch
 class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumRoomListBinding>(R.layout.fragment_lorem_picsum_room_list) {
 
     private val loremPicsumRoomListViewModel: LoremPicsumRoomListViewModel by viewModels {
-        LoremPicsumRoomListViewModel.Factory(LoremPicsumDatabase.getInstance(requireContext()))
+        LoremPicsumRoomListViewModel.Factory(LoremPicsumDatabase.getInstance(requireContext()), requireContext().dataStore)
     }
     private lateinit var loremPicsumListAdapter : LoremPicsumRoomListAdapter
 
@@ -47,7 +49,6 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
         postponeEnterTransition()
         exitTransition = MaterialFadeThrough()
         reenterTransition = MaterialFadeThrough()
-        setupNavigation()
         setupRecycler(view)
     }
 
@@ -59,16 +60,6 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
     override fun onStop() {
         super.onStop()
         loremPicsumListAdapter.removeItemClickListener(loremPicsumRoomListViewModel)
-    }
-
-    private fun setupNavigation() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){ //This will collect when started and cancel the coroutine when stopped
-                loremPicsumRoomListViewModel.navigationInstructions.collectLatest {
-                    findNavController().executeNavInstructions(it)
-                }
-            }
-        }
     }
 
     private fun setupRecycler(view : View) {
@@ -112,5 +103,9 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
                 }
             }
         }
+    }
+
+    override fun getViewModel(): BaseFragmentViewModel {
+        return loremPicsumRoomListViewModel
     }
 }

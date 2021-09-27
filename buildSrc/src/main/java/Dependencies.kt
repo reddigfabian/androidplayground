@@ -15,9 +15,10 @@ object Versions {
     //AndroidX
     const val appCompat = "1.3.1"
     const val paging = "3.1.0-alpha03"
-    const val navVersion = "2.3.5"
+    const val navVersion = "2.4.0-alpha09"
     const val lifeCycleRuntime = "2.4.0-alpha03"
     const val kotlinxCoroutines = "1.5.1"
+    const val datastorePreferences = "1.0.0"
 
     //Room
     const val room = "2.4.0-alpha04"
@@ -70,6 +71,7 @@ object Dependencies {
     const val kotlinxCoroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinxCoroutines}"
     const val kotlinxCoroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinxCoroutines}"
     const val kotlinxCoroutinesReactive = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${Versions.kotlinxCoroutines}"
+    const val datastorePreferences = "androidx.datastore:datastore-preferences:${Versions.datastorePreferences}"
 
     //Room
     const val roomRuntime = "androidx.room:room-runtime:${Versions.room}"

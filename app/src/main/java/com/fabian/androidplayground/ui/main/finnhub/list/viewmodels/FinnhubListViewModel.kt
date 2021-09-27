@@ -2,17 +2,19 @@ package com.fabian.androidplayground.ui.main.finnhub.list.viewmodels
 
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.*
 import androidx.paging.*
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.finnhub.FinnhubApi
 import com.fabian.androidplayground.api.finnhub.FinnhubPagingSource
 import com.fabian.androidplayground.api.finnhub.FinnhubStockSymbol
+import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
 import com.fabian.androidplayground.common.navigation.NavInstructions
+import com.fabian.androidplayground.common.navigation.NavToInstructions
 import com.fabian.androidplayground.common.recyclerview.views.ItemClickListener
+import com.fabian.androidplayground.ui.main.coroutines.viewmodels.CoroutinesViewModel
 import com.fabian.androidplayground.ui.main.finnhub.detail.views.FinnhubDetailFragmentArgs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,17 +22,21 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-private const val TAG = "FinnhubListViewModel"
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class FinnhubListViewModel : ViewModel(), ItemClickListener<FinnhubItemViewModel> {
+class FinnhubListViewModel private constructor(dataStore: DataStore<Preferences>) : BaseFragmentViewModel(dataStore), ItemClickListener<FinnhubItemViewModel> {
 
     companion object {
         private const val PAGE_SIZE = 10
     }
 
-    val navigationInstructions = MutableSharedFlow<NavInstructions>()
+    override val TAG = "FinnhubListViewModel"
+
+    class Factory(private val dataStore : DataStore<Preferences>) : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+            FinnhubListViewModel(dataStore) as T
+    }
 
     private val filterItems = MutableStateFlow(mutableListOf<FinnhubStockSymbol>())
     val isEmptyLiveData = MutableLiveData(false)
@@ -74,7 +80,7 @@ class FinnhubListViewModel : ViewModel(), ItemClickListener<FinnhubItemViewModel
 
     override fun onItemClick(item: FinnhubItemViewModel, view : View) {
         viewModelScope.launch {
-            navigationInstructions.emit(NavInstructions(R.id.FinnhubDetailFragment, FinnhubDetailFragmentArgs(item.finnhubStock).toBundle()))
+            navigationInstructions.emit(NavToInstructions(R.id.FinnhubDetailFragment, FinnhubDetailFragmentArgs(item.finnhubStock).toBundle()))
         }
     }
 

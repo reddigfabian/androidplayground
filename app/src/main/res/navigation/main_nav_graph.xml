@@ -3,8 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/LaunchFragment">
+    app:startDestination="@id/SplashFragment">
+    <action
+        android:id="@+id/to_login"
+        app:destination="@id/login_nav_graph"
+        app:popUpTo="@id/login_nav_graph"
+        app:popUpToInclusive="true"/>
+    <action
+        android:id="@+id/to_onboarding"
+        app:destination="@id/onboarding_nav_graph"
+        app:popUpTo="@id/login_nav_graph"
+        app:popUpToInclusive="true"/>
+    <action
+        android:id="@+id/to_launch"
+        app:destination="@id/LaunchFragment"
+        app:popUpTo="@id/main_nav_graph"
+        app:popUpToInclusive="true"/>
+    <action
+        android:id="@+id/to_fileio"
+        app:destination="@id/fileio_nav_graph"
+        app:popUpTo="@id/fileio_nav_graph"
+        app:popUpToInclusive="true"/>
 
+    <include
+        app:graph="@navigation/login_nav_graph" />
+    <include
+        app:graph="@navigation/onboarding_nav_graph" />
     <include
         app:graph="@navigation/lorem_picsum_nav_graph" />
     <include
@@ -17,28 +41,28 @@
         app:graph="@navigation/coroutines_nav_graph" />
     <include
         app:graph="@navigation/flows_nav_graph" />
+    <include
+        app:graph="@navigation/fileio_nav_graph" />
+    <include
+        app:graph="@navigation/choose_password_nav_graph" />
+    <include
+        app:graph="@navigation/choose_name_nav_graph" />
+
+    <fragment
+        android:id="@+id/SplashFragment"
+        android:name="com.fabian.androidplayground.ui.splash.views.SplashFragment">
+        <argument
+            android:name="nextID"
+            app:argType="integer"/>
+        <argument
+            android:name="intentArgs"
+            app:argType="com.fabian.androidplayground.common.navigation.IntentNavArgs"
+            app:nullable="true"/>
+    </fragment>
 
     <fragment
         android:id="@+id/LaunchFragment"
         android:name="com.fabian.androidplayground.ui.main.launch.views.LaunchFragment"
         tools:layout="@layout/fragment_launch">
-        <action
-            android:id="@+id/action_launch_to_picsum"
-            app:destination="@id/lorem_picsum_nav_graph"/>
-        <action
-            android:id="@+id/action_launch_to_picsum_room"
-            app:destination="@id/lorem_picsum_room_nav_graph"/>
-        <action
-            android:id="@+id/action_launch_to_finnhub"
-            app:destination="@id/finnhub_nav_graph"/>
-        <action
-            android:id="@+id/action_launch_to_tensorflow"
-            app:destination="@id/tensorflow_nav_graph"/>
-        <action
-            android:id="@+id/action_launch_to_coroutines"
-            app:destination="@id/coroutines_nav_graph"/>
-        <action
-            android:id="@+id/action_launch_to_flows"
-            app:destination="@id/flows_nav_graph"/>
     </fragment>
 </navigation>

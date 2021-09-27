@@ -3,7 +3,6 @@ package com.fabian.androidplayground.ui.main.picsumroom.detail.views
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,29 +14,22 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.Transition
-import androidx.transition.TransitionManager
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
 import com.fabian.androidplayground.common.navigation.NavBackInstruction
-import com.fabian.androidplayground.common.utils.UIUtils
 import com.fabian.androidplayground.databinding.FragmentLoremPicsumRoomDetailBinding
 import com.fabian.androidplayground.db.lorempicsum.LoremPicsumDatabase
 import com.fabian.androidplayground.ui.main.picsumroom.detail.viewmodels.LoremPicsumRoomDetailViewModel
 import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialFadeThrough
-import kotlinx.android.synthetic.main.fragment_lorem_picsum_room_detail.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 
-import android.view.ViewTreeObserver
-import android.view.animation.BounceInterpolator
-import android.view.animation.CycleInterpolator
-import android.view.animation.OvershootInterpolator
 import com.fabian.androidplayground.common.animation.SwingInterpolator
-import kotlin.math.PI
+import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
+import com.fabian.androidplayground.common.datastore.dataStore
 
 
 private const val TAG = "LoremPicsumRoomDetailFr"
@@ -47,7 +39,7 @@ private const val TAG = "LoremPicsumRoomDetailFr"
 class LoremPicsumRoomDetailFragment : BaseDataBindingFragment<FragmentLoremPicsumRoomDetailBinding>(R.layout.fragment_lorem_picsum_room_detail) {
     private val args : LoremPicsumRoomDetailFragmentArgs by navArgs()
     private val loremPicsumDetailViewModel : LoremPicsumRoomDetailViewModel by viewModels {
-        LoremPicsumRoomDetailViewModel.Factory(args.picsum, LoremPicsumDatabase.getInstance(requireContext()))
+        LoremPicsumRoomDetailViewModel.Factory(args.picsum, LoremPicsumDatabase.getInstance(requireContext()), requireContext().dataStore)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,20 +92,7 @@ class LoremPicsumRoomDetailFragment : BaseDataBindingFragment<FragmentLoremPicsu
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                loremPicsumDetailViewModel.navigationInstructions.collectLatest {
-                    when (it) {
-                        is NavBackInstruction -> {
-                            findNavController().popBackStack()
-                        }
-                        else -> {
-                            //TODO("Not yet implemented")
-                        }
-                    }
-                }
-            }
-        }
+        super.onViewCreated(view, savedInstanceState)
 
         val viewTreeObserver = binding.detailAuthorCard.viewTreeObserver
         if (viewTreeObserver.isAlive) {
@@ -139,5 +118,9 @@ class LoremPicsumRoomDetailFragment : BaseDataBindingFragment<FragmentLoremPicsu
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun getViewModel(): BaseFragmentViewModel {
+        return loremPicsumDetailViewModel
     }
 }

@@ -3,18 +3,27 @@ package com.fabian.androidplayground.ui.main.coroutines.viewmodels
 import android.graphics.Color
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
+import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
-import java.util.concurrent.locks.ReentrantLock
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
-private const val TAG = "CoroutinesViewModel"
+class CoroutinesViewModel private constructor(dataStore : DataStore<Preferences>) : BaseFragmentViewModel(dataStore) {
 
-class CoroutinesViewModel : ViewModel() {
+    override val TAG = "CoroutinesViewModel"
+
+    class Factory(private val dataStore : DataStore<Preferences>) : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+            CoroutinesViewModel(dataStore) as T
+    }
 
     private val threadNameToColorMap = mutableMapOf(
         "main" to Color.BLACK

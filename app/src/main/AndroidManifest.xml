@@ -11,12 +11,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidPlayground"
         android:allowBackup="false">
-        <activity android:name=".ui.main.views.MainActivity"
-            android:exported="true">
+        <activity android:name="com.fabian.androidplayground.ui.common.views.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.share.views.ShareActivity"
+            android:exported="true"
+            android:noHistory="true"
+            android:launchMode="singleTask"
+            android:label="@string/file_io">
         </activity>
     </application>
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onboarding_nav_graph"
+    app:startDestination="@id/OnboardingFragment">
+
+    <include
+        app:graph="@navigation/choose_name_nav_graph" />
+    <include
+        app:graph="@navigation/choose_password_nav_graph" />
+
+    <action
+        android:id="@+id/to_choose_password"
+        app:destination="@id/choose_password_nav_graph"
+        app:popUpTo="@id/choose_password_nav_graph"
+        app:popUpToInclusive="true"/>
+
+    <fragment
+        android:id="@+id/OnboardingFragment"
+        android:name="com.fabian.androidplayground.ui.onboarding.views.OnboardingFragment">
+        <action
+            android:id="@+id/to_choose_password"
+            app:destination="@id/choose_password_nav_graph"
+            app:popUpTo="@id/choose_password_nav_graph"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/to_choose_name"
+            app:destination="@id/choose_name_nav_graph"
+            app:popUpTo="@id/choose_name_nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
+</navigation>

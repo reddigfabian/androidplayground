@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fileio_nav_graph"
+    app:startDestination="@id/FileIOFragment">
+    <fragment
+        android:id="@+id/FileIOFragment"
+        android:name="com.fabian.androidplayground.ui.main.fileio.list.views.FileIOFragment"
+        tools:layout="@layout/fragment_fileio">
+        <argument
+            android:name="intentArgs"
+            app:argType="com.fabian.androidplayground.common.navigation.IntentNavArgs"
+            app:nullable="true"/>
+    </fragment>
+</navigation>

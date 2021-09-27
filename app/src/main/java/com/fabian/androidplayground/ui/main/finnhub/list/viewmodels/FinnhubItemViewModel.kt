@@ -2,10 +2,7 @@ package com.fabian.androidplayground.ui.main.finnhub.list.viewmodels
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.fabian.androidplayground.BR
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.api.finnhub.CurrencyToSymbolMap
@@ -21,7 +18,7 @@ import kotlinx.coroutines.launch
 private const val TAG = "FinnhubItemViewModel"
 
 @SuppressLint("CheckResult")
-class FinnhubItemViewModel(finnhubStock: FinnhubStockSymbol) : AbstractFinnhubViewModel(finnhubStock) {
+class FinnhubItemViewModel(val finnhubStock: FinnhubStockSymbol) : ViewModel(), LifecycleObserver {
     private val currencySymbol = CurrencyToSymbolMap.getSymbol(finnhubStock.currency)
     val price = MutableLiveData("$currencySymbol${finnhubStock.quote?.c}")
     var job : Job? = null
