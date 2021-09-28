@@ -11,11 +11,10 @@ data class IntentNavArgs(val action : String?,
                          val extras : Bundle?) : Parcelable {
 
     companion object {
-        const val PARCEL_KEY = "INTENT_NAV_ARGS_PARCEL_KEY"
+        const val PARCEL_KEY = "intentArgs"
 
         fun fromIntent(intent : Intent) : IntentNavArgs {
             return IntentNavArgs(intent.action, intent.type, intent.extras)
         }
     }
-
 }

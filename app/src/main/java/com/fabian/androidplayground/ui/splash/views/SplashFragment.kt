@@ -12,7 +12,7 @@ import com.fabian.androidplayground.ui.splash.viewmodels.SplashViewModel
 class SplashFragment : BaseDataBindingFragment<ViewDataBinding>() {
     private val args by navArgs<SplashFragmentArgs>()
     private val splashViewModel : SplashViewModel by viewModels {
-        SplashViewModel.Factory(args.nextID, args.intentArgs, requireContext().dataStore)
+        SplashViewModel.Factory(requireContext().dataStore, args.nextID, args.intentArgs)
     }
 
     override fun getViewModel(): BaseFragmentViewModel {

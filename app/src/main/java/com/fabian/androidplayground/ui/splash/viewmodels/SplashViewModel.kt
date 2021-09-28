@@ -15,17 +15,18 @@ import com.fabian.androidplayground.common.navigation.NavPopInstructions
 import com.fabian.androidplayground.common.navigation.NavToInstructions
 import kotlinx.coroutines.async
 
-class SplashViewModel private constructor(private val nextID : Int,
-                                          private val nextIntentArgs : IntentNavArgs?,
-                                          dataStore : DataStore<Preferences>) : BaseFragmentViewModel(dataStore) {
+class SplashViewModel private constructor(
+    dataStore : DataStore<Preferences>,
+    nextID : Int,
+    nextIntentArgs : IntentNavArgs?) : BaseFragmentViewModel(dataStore, nextID, nextIntentArgs) {
 
     override val TAG = "SplashViewModel"
 
-    class Factory(private val nextID : Int,
-                  private val nextIntentArgs : IntentNavArgs?,
-                  private val dataStore : DataStore<Preferences>) : ViewModelProvider.NewInstanceFactory() {
+    class Factory(private val dataStore : DataStore<Preferences>,
+                  private val nextID : Int,
+                  private val nextIntentArgs : IntentNavArgs?) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-            SplashViewModel(nextID, nextIntentArgs, dataStore) as T
+            SplashViewModel(dataStore, nextID, nextIntentArgs) as T
     }
 
     override fun startUpCheck() = viewModelScope.async {
@@ -33,12 +34,11 @@ class SplashViewModel private constructor(private val nextID : Int,
         val await = super.startUpCheck()?.await() ?: false
         Log.d(TAG, "startUpCheck: came back from super. ${if (await) "super handled startup" else "super didn't handle startup"}")
         if (!await) {
-            if (cancel) {
+            if (nextID != 0) {
                 val b = Bundle()
-                b.putParcelable("intentArgs", nextIntentArgs)
+                b.putParcelable(IntentNavArgs.PARCEL_KEY, nextIntentArgs)
                 navigationInstructions.emit(NavToInstructions(nextID, b))
             } else {
-                cancel = true
                 navigationInstructions.emit(NavPopInstructions(R.id.main_nav_graph, true))
             }
             return@async true

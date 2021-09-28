@@ -1,5 +1,6 @@
 package com.fabian.androidplayground.ui.user.name.views
 
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
@@ -9,8 +10,9 @@ import com.fabian.androidplayground.databinding.FragmentChooseNameBinding
 import com.fabian.androidplayground.ui.user.name.viewmodels.ChooseNameViewModel
 
 class ChooseNameFragment : BaseDataBindingFragment<FragmentChooseNameBinding>(R.layout.fragment_choose_name) {
+    private val args by navArgs<ChooseNameFragmentArgs>()
     private val chooseNameViewModel : ChooseNameViewModel by navGraphViewModels(R.id.choose_name_nav_graph) {
-        ChooseNameViewModel.Factory(requireContext().dataStore)
+        ChooseNameViewModel.Factory(requireContext().dataStore, args.nextID, args.intentArgs)
     }
 
     override fun setDataBoundViewModels(binding: FragmentChooseNameBinding) {

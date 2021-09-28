@@ -8,14 +8,15 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.*
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.auth.LoginToken
-import com.fabian.androidplayground.common.navigation.NavBackInstruction
-import com.fabian.androidplayground.common.navigation.NavInstructions
-import com.fabian.androidplayground.common.navigation.NavPopInstructions
-import com.fabian.androidplayground.common.navigation.NavToInstructions
+import com.fabian.androidplayground.common.navigation.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Preferences>) : ViewModel(), LifecycleObserver {
+abstract class BaseFragmentViewModel(
+    protected val dataStore : DataStore<Preferences>,
+    protected val nextID : Int = 0,
+    protected val nextIntentArgs : IntentNavArgs? = null
+) : ViewModel(), LifecycleObserver {
 
     abstract val TAG : String
 
@@ -43,38 +44,23 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
     val navigationInstructions = MutableSharedFlow<NavInstructions>()
 
     @Suppress("DeferredResultUnused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun doOnResume() {
-        Log.d(TAG, "doOnResume")
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun doOnStart() {
+        Log.d(TAG, "doOnStart")
         startUpCheck()
     }
-
-    var cancel = true
 
     open fun startUpCheck() : Deferred<Boolean>? = viewModelScope.async {
         Log.d(TAG, "startUpCheck: base")
         if (!isOnboarded()) {
-            if (cancel) {
-                cancel = false
-                Log.d(TAG, "startUpCheck: not onboarded")
-                navigationInstructions.emit(NavToInstructions(R.id.to_onboarding))
-            } else {
-                cancel = true
-                navigationInstructions.emit(NavPopInstructions(R.id.main_nav_graph, true))
-            }
+            Log.d(TAG, "startUpCheck: not onboarded")
+            navigationInstructions.emit(NavToInstructions(R.id.to_onboarding))
             true
         } else if (!isLoggedIn()) {
-            if (cancel) {
-                cancel = false
-                Log.d(TAG, "startUpCheck: not logged in")
-                navigationInstructions.emit(NavToInstructions(R.id.to_login))
-            } else {
-                cancel = true
-                navigationInstructions.emit(NavPopInstructions(R.id.main_nav_graph, true))
-            }
+            Log.d(TAG, "startUpCheck: not logged in")
+            navigationInstructions.emit(NavToInstructions(R.id.to_login))
             true
         } else {
-            cancel = true
             Log.d(TAG, "startUpCheck: all good")
             false
         }
