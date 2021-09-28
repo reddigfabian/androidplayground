@@ -3,6 +3,7 @@ package com.fabian.androidplayground.ui.onboarding.viewmodels
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -15,6 +16,10 @@ import kotlinx.coroutines.async
 
 class OnboardingViewModel private constructor(dataStore : DataStore<Preferences>) : BaseFragmentViewModel(dataStore) {
 
+    companion object {
+        const val ONBOARDING_SUCCESS = "ONBOARDING_SUCCESS"
+    }
+
     override val TAG = "OnboardingViewModel"
 
     class Factory(private val dataStore : DataStore<Preferences>) : ViewModelProvider.NewInstanceFactory() {
@@ -22,29 +27,19 @@ class OnboardingViewModel private constructor(dataStore : DataStore<Preferences>
             OnboardingViewModel(dataStore) as T
     }
 
+    val onboardingSuccess = MutableLiveData(false)
+
     override fun startUpCheck() = viewModelScope.async {
         Log.d(TAG, "startUpCheck: onboarding")
         if (!hasName().await()) {
-            if (cancel) {
-                cancel = false
-                navigationInstructions.emit(NavToInstructions(R.id.to_choose_name))
-            } else {
-                cancel = true
-                navigationInstructions.emit(NavPopInstructions(R.id.onboarding_nav_graph, true))
-            }
+            navigationInstructions.emit(NavToInstructions(R.id.to_choose_name))
             return@async true
         } else if (!hasPassword().await()) {
-            if (cancel) {
-                cancel = false
-                navigationInstructions.emit(NavToInstructions(R.id.to_choose_password))
-            } else {
-                cancel = true
-                navigationInstructions.emit(NavPopInstructions(R.id.onboarding_nav_graph, true))
-            }
+            navigationInstructions.emit(NavToInstructions(R.id.to_choose_password))
             return@async true
         } else {
-            cancel = true
             LoginToken.isLoggedIn = true
+            onboardingSuccess.postValue(true)
             navigationInstructions.emit(NavPopInstructions(R.id.onboarding_nav_graph, true))
             return@async true
         }

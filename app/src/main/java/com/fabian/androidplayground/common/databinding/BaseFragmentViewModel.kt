@@ -49,32 +49,27 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
         startUpCheck()
     }
 
-    var cancel = true
+    var onboardingSuccessful : Boolean? = null
 
     open fun startUpCheck() : Deferred<Boolean>? = viewModelScope.async {
         Log.d(TAG, "startUpCheck: base")
         if (!isOnboarded()) {
-            if (cancel) {
-                cancel = false
+            if (onboardingSuccessful == null) {
                 Log.d(TAG, "startUpCheck: not onboarded")
                 navigationInstructions.emit(NavToInstructions(R.id.to_onboarding))
+                true
             } else {
-                cancel = true
-                navigationInstructions.emit(NavPopInstructions(R.id.main_nav_graph, true))
+                if (onboardingSuccessful == true) {
+                    false
+                } else {
+                    true
+                }
             }
-            true
         } else if (!isLoggedIn()) {
-            if (cancel) {
-                cancel = false
-                Log.d(TAG, "startUpCheck: not logged in")
-                navigationInstructions.emit(NavToInstructions(R.id.to_login))
-            } else {
-                cancel = true
-                navigationInstructions.emit(NavPopInstructions(R.id.main_nav_graph, true))
-            }
+            Log.d(TAG, "startUpCheck: not logged in")
+            navigationInstructions.emit(NavToInstructions(R.id.to_login))
             true
         } else {
-            cancel = true
             Log.d(TAG, "startUpCheck: all good")
             false
         }

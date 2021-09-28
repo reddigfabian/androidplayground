@@ -33,14 +33,9 @@ class SplashViewModel private constructor(private val nextID : Int,
         val await = super.startUpCheck()?.await() ?: false
         Log.d(TAG, "startUpCheck: came back from super. ${if (await) "super handled startup" else "super didn't handle startup"}")
         if (!await) {
-            if (cancel) {
-                val b = Bundle()
-                b.putParcelable("intentArgs", nextIntentArgs)
-                navigationInstructions.emit(NavToInstructions(nextID, b))
-            } else {
-                cancel = true
-                navigationInstructions.emit(NavPopInstructions(R.id.main_nav_graph, true))
-            }
+            val b = Bundle()
+            b.putParcelable("intentArgs", nextIntentArgs)
+            navigationInstructions.emit(NavToInstructions(nextID, b))
             return@async true
         }
         return@async false

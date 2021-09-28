@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
+import com.fabian.androidplayground.ui.onboarding.viewmodels.OnboardingViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -65,6 +66,9 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(OnboardingViewModel.ONBOARDING_SUCCESS)?.observe(viewLifecycleOwner) {
+            getViewModel().onboardingSuccessful = it
+        }
     }
 
     @CallSuper
