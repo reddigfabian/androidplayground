@@ -11,9 +11,13 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.fabian.androidplayground.R
+import com.fabian.androidplayground.common.navigation.IntentNavArgs
+import com.fabian.androidplayground.common.navigation.NavPopInstructions
 import com.fabian.androidplayground.common.navigation.NavToInstructions
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
 import com.fabian.androidplayground.ui.onboarding.views.OnboardingFragment
@@ -48,43 +52,14 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
             setDataBoundViewModels(binding)
             return binding.root
         }
-        lifecycleScope.launch {
-            startUpCheck()
-        }
         Log.d(TAG, "onCreateView: Returning headless fragment")
         return null
     }
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-    }
-
-    protected open suspend fun startUpCheck() : Boolean {
-        return if (!getViewModel().isOnboarded()) {
-            Log.d(TAG, "onViewCreated: Not onboarded")
-            val onboardingCancelled = !(findNavController().currentBackStackEntry?.savedStateHandle?.get<Boolean>(OnboardingFragment.ONBOARDING_COMPLETE) ?: true)
-            if (onboardingCancelled) {
-                requireActivity().finish()
-            } else {
-                findNavController().executeNavInstructions(NavToInstructions(R.id.to_onboarding))
-            }
-            true
-        } else if (!getViewModel().isLoggedIn()) {
-            Log.d(TAG, "onViewCreated: Not logged in")
-            val loginCancelled = !(findNavController().currentBackStackEntry?.savedStateHandle?.get<Boolean>(LoginFragment.LOGIN_COMPLETE) ?: true)
-            if (loginCancelled) {
-                requireActivity().finish()
-            } else {
-                findNavController().executeNavInstructions(NavToInstructions(R.id.to_login))
-            }
-            true
-        } else {
-            Log.d(TAG, "onViewCreated: All good")
-            false
-        }
     }
 
     @CallSuper
@@ -95,4 +70,21 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
 
     abstract fun getViewModel() : BaseFragmentViewModel
 
+    open fun getNextID() : Int {
+        return 0
+    }
+
+    open fun getNextIntentArgs() : IntentNavArgs? {
+        return null
+    }
+
+    protected fun goToNext() {
+        if (getNextID() == 0) {
+            findNavController().executeNavInstructions(NavPopInstructions(R.id.onboarding_nav_graph, true))
+        } else {
+            val b = Bundle()
+            b.putParcelable(IntentNavArgs.PARCEL_KEY, getNextIntentArgs())
+            findNavController().executeNavInstructions(NavToInstructions(getNextID(), b))
+        }
+    }
 }

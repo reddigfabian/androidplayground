@@ -31,20 +31,17 @@ class ChooseNameViewModel private constructor(dataStore : DataStore<Preferences>
 
     fun submitClick(v : View) {
         name.value?.let { nonNullName ->
-            viewModelScope.launch {
-                if (submitNameAsync(nonNullName).await()) {
-                    chooseNameComplete.postValue(true)
-                } else {
-                    Toast.makeText(v.context, "Something went wrong :(", Toast.LENGTH_SHORT).show()
-                }
-            }
+            chooseNameComplete.postValue(true)
         }
     }
 
-    private fun submitNameAsync(name : String) = viewModelScope.async {
+    fun submitNameAsync(name : String?) = viewModelScope.async {
+        if (name.isNullOrEmpty()) {
+            return@async false
+        }
         try {
             dataStore.edit { prefs ->
-                prefs[NAME_PREF] = name
+                prefs[namePref] = name
             }
             true
         } catch (ex : Exception) {

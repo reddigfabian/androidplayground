@@ -2,20 +2,29 @@ package com.fabian.androidplayground.ui.onboarding.views
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.auth.LoginToken
 import com.fabian.androidplayground.common.databinding.BaseDataBindingFragment
 import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
 import com.fabian.androidplayground.common.datastore.dataStore
+import com.fabian.androidplayground.common.navigation.IntentNavArgs
 import com.fabian.androidplayground.common.navigation.NavPopInstructions
 import com.fabian.androidplayground.common.navigation.NavToInstructions
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
 import com.fabian.androidplayground.ui.onboarding.viewmodels.OnboardingViewModel
+import com.fabian.androidplayground.ui.splash.views.SplashFragmentArgs
 import com.fabian.androidplayground.ui.user.name.views.ChooseNameFragment
 import com.fabian.androidplayground.ui.user.password.views.ChoosePasswordFragment
+import com.fabian.androidplayground.ui.user.password.views.ChoosePasswordFragmentArgs
+import kotlinx.coroutines.launch
 
 class OnboardingFragment : BaseDataBindingFragment<ViewDataBinding>() {
     companion object {
@@ -24,6 +33,7 @@ class OnboardingFragment : BaseDataBindingFragment<ViewDataBinding>() {
 
     override val TAG = "OnboardingFragment"
 
+    private val args by navArgs<OnboardingFragmentArgs>()
     private val onboardingViewModel : OnboardingViewModel by viewModels {
         OnboardingViewModel.Factory(requireContext().dataStore)
     }
@@ -33,33 +43,38 @@ class OnboardingFragment : BaseDataBindingFragment<ViewDataBinding>() {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(ONBOARDING_COMPLETE, false)
     }
 
-    override suspend fun startUpCheck() : Boolean {
-        Log.d(TAG, "startUpCheck: onboarding")
-        return if (!onboardingViewModel.hasName().await()) {
-            val chooseNameCancelled = !(findNavController().currentBackStackEntry?.savedStateHandle?.get<Boolean>(ChooseNameFragment.CHOOSE_NAME_COMPLETE) ?: true)
-            if (chooseNameCancelled) {
-                findNavController().executeNavInstructions(NavPopInstructions(R.id.onboarding_nav_graph, true))
-            } else {
-                findNavController().executeNavInstructions(NavToInstructions(R.id.to_choose_name))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                pickName()
             }
-            true
-        } else if (!onboardingViewModel.hasPassword().await()) {
-            val choosePasswordCancelled = !(findNavController().currentBackStackEntry?.savedStateHandle?.get<Boolean>(ChoosePasswordFragment.CHOOSE_PASSWORD_COMPLETE) ?: true)
-            if (choosePasswordCancelled) {
-                findNavController().executeNavInstructions(NavPopInstructions(R.id.onboarding_nav_graph, true))
-            } else {
-                findNavController().executeNavInstructions(NavToInstructions(R.id.to_choose_password))
-            }
-            true
-        } else {
-            LoginToken.isLoggedIn = true
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(ONBOARDING_COMPLETE, true)
-            findNavController().executeNavInstructions(NavPopInstructions(R.id.onboarding_nav_graph, true))
-            true
         }
+    }
+
+    private fun pickName() {
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(ChooseNameFragment.CHOOSE_NAME_COMPLETE)?.observe(viewLifecycleOwner) { chooseNameComplete ->
+            if (chooseNameComplete) {
+                pickPassword()
+            } else {
+                findNavController().executeNavInstructions(NavPopInstructions(R.id.onboarding_nav_graph, true))
+            }
+        }
+    }
+
+    private fun pickPassword() {
+
     }
 
     override fun getViewModel(): BaseFragmentViewModel {
         return onboardingViewModel
+    }
+
+    override fun getNextID(): Int {
+        return args.nextID
+    }
+
+    override fun getNextIntentArgs(): IntentNavArgs? {
+        return args.intentArgs
     }
 }

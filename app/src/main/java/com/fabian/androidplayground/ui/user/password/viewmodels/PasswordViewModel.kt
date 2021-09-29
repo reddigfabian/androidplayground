@@ -67,7 +67,7 @@ class PasswordViewModel private constructor(dataStore : DataStore<Preferences>) 
     private fun submitPasswordAsync(password : String) = viewModelScope.async {
         try {
             dataStore.edit { prefs ->
-                prefs[PASSWORD_PREF] = password
+                prefs[passwordPref] = password
             }
             true
         } catch (ex : Exception) {

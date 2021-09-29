@@ -16,6 +16,14 @@ data class IntentNavArgs(val action : String?,
         fun fromIntent(intent : Intent) : IntentNavArgs {
             return IntentNavArgs(intent.action, intent.type, intent.extras)
         }
+
+//        fun empty() : IntentNavArgs {
+//            return IntentNavArgs(null, null, null)
+//        }
     }
+
+//    fun isEmpty() : Boolean {
+//        return action == null && type == null && (extras == null || extras.isEmpty)
+//    }
 
 }

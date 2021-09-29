@@ -24,18 +24,15 @@ class SplashFragment : BaseDataBindingFragment<ViewDataBinding>() {
         SplashViewModel.Factory(requireContext().dataStore)
     }
 
-    override suspend fun startUpCheck() : Boolean {
-        Log.d(TAG, "startUpCheck: splash")
-        if (!super.startUpCheck()) {
-            val b = Bundle()
-            b.putParcelable(IntentNavArgs.PARCEL_KEY, args.intentArgs)
-            findNavController().executeNavInstructions(NavToInstructions(args.nextID, b))
-            return true
-        }
-        return false
-    }
-
     override fun getViewModel(): BaseFragmentViewModel {
         return splashViewModel
+    }
+
+    override fun getNextID(): Int {
+        return args.nextID
+    }
+
+    override fun getNextIntentArgs(): IntentNavArgs? {
+        return args.intentArgs
     }
 }

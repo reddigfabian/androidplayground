@@ -19,24 +19,24 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
 
     abstract val TAG : String
 
-    protected val NAME_PREF = stringPreferencesKey("NAME_PREF")
-    protected val PASSWORD_PREF = stringPreferencesKey("PASSWORD_PREF")
+    protected val namePref = stringPreferencesKey("NAME_PREF")
+    protected val passwordPref = stringPreferencesKey("PASSWORD_PREF")
     protected fun getNameFlow() : Flow<String?> {
         return dataStore.data
             .map { preferences ->
-                preferences[NAME_PREF]
+                preferences[namePref]
             }
     }
     protected suspend fun getName() : String? {
         return dataStore.data
             .map { preferences ->
-                preferences[NAME_PREF]
+                preferences[namePref]
             }.first()
     }
     protected suspend fun getPassword() : String? {
         return dataStore.data
             .map { preferences ->
-                preferences[PASSWORD_PREF]
+                preferences[passwordPref]
             }.first()
     }
 
@@ -47,11 +47,11 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
         return !listOf(hasName(), hasPassword()).awaitAll().contains(false)
     }
 
-    fun hasName() = viewModelScope.async {
+    private fun hasName() = viewModelScope.async {
         !getName().isNullOrEmpty()
     }
 
-    suspend fun hasPassword() = viewModelScope.async {
+    private fun hasPassword() = viewModelScope.async {
         !getPassword().isNullOrEmpty()
     }
 

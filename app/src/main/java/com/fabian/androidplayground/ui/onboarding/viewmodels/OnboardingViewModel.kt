@@ -14,4 +14,7 @@ class OnboardingViewModel private constructor(dataStore : DataStore<Preferences>
         override fun <T : ViewModel?> create(modelClass: Class<T>): T =
             OnboardingViewModel(dataStore) as T
     }
+
+    var name : String? = null
+    var password : String? = null
 }
