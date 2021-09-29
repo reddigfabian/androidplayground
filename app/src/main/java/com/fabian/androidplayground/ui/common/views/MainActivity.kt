@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.navigation.findNavController
 import com.fabian.androidplayground.R
+import com.fabian.androidplayground.common.auth.AuthActivity
 import com.fabian.androidplayground.common.databinding.BaseDataBindingActivity
 import com.fabian.androidplayground.common.datastore.dataStore
 import com.fabian.androidplayground.common.navigation.IntentNavArgs
@@ -23,7 +24,9 @@ private const val TAG = "MainActivity"
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
+class MainActivity : AuthActivity<ActivityMainBinding>(R.navigation.main_nav_graph, R.layout.activity_main) {
+
+    override val navHostFragmentID = R.id.navHostFragment
 
     private val mainViewModel : MainViewModel by viewModels {
         MainViewModel.Factory(dataStore)
@@ -57,17 +60,17 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        setGraphOnce()
-    }
-
-    var graphSet = false
-
-    private fun setGraphOnce() {
-        if (!graphSet) {
-            graphSet = true
-            findNavController(R.id.navHostFragment).setGraph(R.navigation.main_nav_graph, SplashFragmentArgs(nextID, IntentNavArgs.fromIntent(intent)).toBundle())
-        }
-    }
+    //    override fun onStart() {
+//        super.onStart()
+//        setGraphOnce()
+//    }
+//
+//    var graphSet = false
+//
+//    private fun setGraphOnce() {
+//        if (!graphSet) {
+//            graphSet = true
+//            findNavController(R.id.navHostFragment).setGraph(R.navigation.main_nav_graph, SplashFragmentArgs(nextID, IntentNavArgs.fromIntent(intent)).toBundle())
+//        }
+//    }
 }

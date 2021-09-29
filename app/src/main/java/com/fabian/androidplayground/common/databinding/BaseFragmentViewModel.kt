@@ -19,6 +19,8 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
 
     abstract val TAG : String
 
+    val navigationInstructions = MutableSharedFlow<NavInstructions>()
+
     protected val NAME_PREF = stringPreferencesKey("NAME_PREF")
     protected val PASSWORD_PREF = stringPreferencesKey("PASSWORD_PREF")
     protected fun getNameFlow() : Flow<String?> {
@@ -39,8 +41,6 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
                 preferences[PASSWORD_PREF]
             }.first()
     }
-
-    val navigationInstructions = MutableSharedFlow<NavInstructions>()
 
     suspend fun isOnboarded() : Boolean {
         Log.d(TAG, "startUpCheck: checking onboarding")

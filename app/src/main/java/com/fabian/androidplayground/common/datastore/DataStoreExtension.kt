@@ -6,3 +6,4 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "prefs")
+val Context.dataStoreUtil: DataStore<Preferences> by preferencesDataStore(name = "prefs")
