@@ -30,14 +30,15 @@ class PasswordViewModel private constructor(dataStore : DataStore<Preferences>) 
     val password = MutableLiveData<String?>(null)
     val confirmPassword = MutableLiveData<String?>(null)
 
+    val passwordEntered = MutableLiveData(false)
+    val passwordConfirmed = MutableLiveData(false)
+
     fun submitClick(v : View) {
         when (v.id) {
             R.id.choosePasswordSubmitButton -> {
                 password.value?.let { nonNullPassword ->
                     if (nonNullPassword.isNotBlank()) {
-                        viewModelScope.launch {
-                            navigationInstructions.emit(NavToInstructions(R.id.confirmPasswordSubmitButton))
-                        }
+                        passwordEntered.postValue(true)
                     } else {
                         Toast.makeText(v.context, "Password is blank", Toast.LENGTH_SHORT).show()
                     }
@@ -49,7 +50,7 @@ class PasswordViewModel private constructor(dataStore : DataStore<Preferences>) 
                         if (nonNullPassword == nonNullConfirmPassword) {
                             viewModelScope.launch {
                                 if (submitPasswordAsync(nonNullPassword).await()) {
-                                    navigationInstructions.emit(NavPopInstructions(R.id.choose_password_nav_graph, true))
+                                    passwordConfirmed.postValue(true)
                                 } else {
                                     Toast.makeText(v.context, "Something went wrong :(", Toast.LENGTH_SHORT).show()
                                 }
@@ -61,10 +62,6 @@ class PasswordViewModel private constructor(dataStore : DataStore<Preferences>) 
                 }
             }
         }
-    }
-
-    override fun startUpCheck(): Deferred<Boolean>? {
-        return null
     }
 
     private fun submitPasswordAsync(password : String) = viewModelScope.async {

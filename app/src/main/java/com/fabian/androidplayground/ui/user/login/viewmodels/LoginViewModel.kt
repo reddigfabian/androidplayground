@@ -27,21 +27,19 @@ class LoginViewModel private constructor(dataStore : DataStore<Preferences>) : B
 
     val name = MutableLiveData<String?>(null)
     val password = MutableLiveData<String?>(null)
+    val loginComplete = MutableLiveData(false)
 
     fun submitClick(v : View) {
         viewModelScope.launch {
             if (verifyCredentials()) {
                 LoginToken.isLoggedIn = true
-                navigationInstructions.emit(NavPopInstructions(R.id.login_nav_graph, true))
+                loginComplete.postValue(true)
             } else {
                 LoginToken.isLoggedIn = false
+                loginComplete.postValue(false)
                 Toast.makeText(v.context, "Wrong Credentials", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun startUpCheck(): Deferred<Boolean>? {
-        return null
     }
 
     private suspend fun verifyCredentials() : Boolean {

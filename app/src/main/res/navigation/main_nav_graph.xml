@@ -12,7 +12,7 @@
     <action
         android:id="@+id/to_onboarding"
         app:destination="@id/onboarding_nav_graph"
-        app:popUpTo="@id/login_nav_graph"
+        app:popUpTo="@id/onboarding_nav_graph"
         app:popUpToInclusive="true"/>
     <action
         android:id="@+id/to_launch"
@@ -22,7 +22,7 @@
     <action
         android:id="@+id/to_fileio"
         app:destination="@id/fileio_nav_graph"
-        app:popUpTo="@id/fileio_nav_graph"
+        app:popUpTo="@id/main_nav_graph"
         app:popUpToInclusive="true"/>
 
     <include
@@ -57,7 +57,8 @@
         <argument
             android:name="intentArgs"
             app:argType="com.fabian.androidplayground.common.navigation.IntentNavArgs"
-            app:nullable="true"/>
+            app:nullable="true"
+            android:defaultValue="@null"/>
     </fragment>
 
     <fragment

@@ -9,7 +9,6 @@
             type="com.fabian.androidplayground.ui.user.name.viewmodels.ChooseNameViewModel"/>
     </data>
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/onboardingRoot"
         android:layout_width="match_parent"

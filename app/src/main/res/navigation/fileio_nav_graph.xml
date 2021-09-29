@@ -11,6 +11,7 @@
         <argument
             android:name="intentArgs"
             app:argType="com.fabian.androidplayground.common.navigation.IntentNavArgs"
-            app:nullable="true"/>
+            app:nullable="true"
+            android:defaultValue="@null"/>
     </fragment>
 </navigation>

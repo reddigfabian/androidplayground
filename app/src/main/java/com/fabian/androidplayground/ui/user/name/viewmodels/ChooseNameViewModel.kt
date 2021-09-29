@@ -27,22 +27,18 @@ class ChooseNameViewModel private constructor(dataStore : DataStore<Preferences>
     }
 
     val name = MutableLiveData<String?>(null)
+    val chooseNameComplete = MutableLiveData(false)
 
     fun submitClick(v : View) {
         name.value?.let { nonNullName ->
             viewModelScope.launch {
                 if (submitNameAsync(nonNullName).await()) {
-                    navigationInstructions.emit(NavPopInstructions(R.id.choose_name_nav_graph, true))
+                    chooseNameComplete.postValue(true)
                 } else {
                     Toast.makeText(v.context, "Something went wrong :(", Toast.LENGTH_SHORT).show()
-                    navigationInstructions.emit(NavBackInstruction)
                 }
             }
         }
-    }
-
-    override fun startUpCheck(): Deferred<Boolean>? {
-        return null
     }
 
     private fun submitNameAsync(name : String) = viewModelScope.async {

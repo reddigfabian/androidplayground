@@ -59,7 +59,15 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
 
     override fun onStart() {
         super.onStart()
+        setGraphOnce()
+    }
 
-        findNavController(R.id.navHostFragment).setGraph(R.navigation.main_nav_graph, SplashFragmentArgs(nextID, IntentNavArgs.fromIntent(intent)).toBundle())
+    var graphSet = false
+
+    private fun setGraphOnce() {
+        if (!graphSet) {
+            graphSet = true
+            findNavController(R.id.navHostFragment).setGraph(R.navigation.main_nav_graph, SplashFragmentArgs(nextID, IntentNavArgs.fromIntent(intent)).toBundle())
+        }
     }
 }

@@ -31,7 +31,8 @@
                 android:id="@+id/loginNameInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@={loginViewModel.name}"/>
+                android:text="@={loginViewModel.name}"
+                android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -50,7 +51,8 @@
                 android:id="@+id/loginWordInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@={loginViewModel.password}"/>
+                android:text="@={loginViewModel.password}"
+                android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

@@ -10,24 +10,18 @@
     <include
         app:graph="@navigation/choose_password_nav_graph" />
 
-    <action
-        android:id="@+id/to_choose_password"
-        app:destination="@id/choose_password_nav_graph"
-        app:popUpTo="@id/choose_password_nav_graph"
-        app:popUpToInclusive="true"/>
-
     <fragment
         android:id="@+id/OnboardingFragment"
         android:name="com.fabian.androidplayground.ui.onboarding.views.OnboardingFragment">
         <action
-            android:id="@+id/to_choose_password"
-            app:destination="@id/choose_password_nav_graph"
-            app:popUpTo="@id/choose_password_nav_graph"
-            app:popUpToInclusive="true"/>
-        <action
             android:id="@+id/to_choose_name"
             app:destination="@id/choose_name_nav_graph"
             app:popUpTo="@id/choose_name_nav_graph"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/to_choose_password"
+            app:destination="@id/choose_password_nav_graph"
+            app:popUpTo="@id/choose_password_nav_graph"
             app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

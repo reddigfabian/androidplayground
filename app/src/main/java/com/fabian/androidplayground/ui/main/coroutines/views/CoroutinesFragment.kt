@@ -13,6 +13,9 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 @ExperimentalCoroutinesApi
 class CoroutinesFragment : BaseDataBindingFragment<FragmentCoroutinesBinding>(R.layout.fragment_coroutines) {
+
+    override val TAG = "CoroutinesFragment"
+
     private val coroutinesViewModel : CoroutinesViewModel by viewModels {
         CoroutinesViewModel.Factory(requireContext().dataStore)
     }

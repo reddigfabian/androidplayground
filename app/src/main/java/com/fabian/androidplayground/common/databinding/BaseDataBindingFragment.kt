@@ -11,34 +11,24 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.fabian.androidplayground.R
+import com.fabian.androidplayground.common.navigation.NavToInstructions
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
-import com.fabian.androidplayground.ui.onboarding.viewmodels.OnboardingViewModel
+import com.fabian.androidplayground.ui.onboarding.views.OnboardingFragment
+import com.fabian.androidplayground.ui.user.login.views.LoginFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-private const val TAG = "BaseDataBindingFragment"
-
 abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private val layoutRes : Int? = null) : Fragment() {
+
+    open val TAG : String = "BaseDataBindingFragment"
 
     private var _viewDataBinding : T? = null
     protected val binding get() = _viewDataBinding!!
 
     open fun setDataBoundViewModels(binding: T){}
-
-    private val backButtonCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            handleBackButtonPressedFromFragment()
-        }
-    }
-
-    protected open fun handleBackButtonPressedFromFragment(){
-        backButtonCallback.isEnabled = false
-        activity?.onBackPressed()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,16 +48,42 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
             setDataBoundViewModels(binding)
             return binding.root
         }
+        lifecycleScope.launch {
+            startUpCheck()
+        }
         Log.d(TAG, "onCreateView: Returning headless fragment")
         return null
     }
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(OnboardingViewModel.ONBOARDING_SUCCESS)?.observe(viewLifecycleOwner) {
-            getViewModel().onboardingSuccessful = it
+    }
+
+    protected open suspend fun startUpCheck() : Boolean {
+        return if (!getViewModel().isOnboarded()) {
+            Log.d(TAG, "onViewCreated: Not onboarded")
+            val onboardingCancelled = !(findNavController().currentBackStackEntry?.savedStateHandle?.get<Boolean>(OnboardingFragment.ONBOARDING_COMPLETE) ?: true)
+            if (onboardingCancelled) {
+                requireActivity().finish()
+            } else {
+                findNavController().executeNavInstructions(NavToInstructions(R.id.to_onboarding))
+            }
+            true
+        } else if (!getViewModel().isLoggedIn()) {
+            Log.d(TAG, "onViewCreated: Not logged in")
+            val loginCancelled = !(findNavController().currentBackStackEntry?.savedStateHandle?.get<Boolean>(LoginFragment.LOGIN_COMPLETE) ?: true)
+            if (loginCancelled) {
+                requireActivity().finish()
+            } else {
+                findNavController().executeNavInstructions(NavToInstructions(R.id.to_login))
+            }
+            true
+        } else {
+            Log.d(TAG, "onViewCreated: All good")
+            false
         }
     }
 

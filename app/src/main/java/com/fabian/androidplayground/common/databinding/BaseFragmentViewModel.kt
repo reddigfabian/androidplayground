@@ -42,53 +42,20 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
 
     val navigationInstructions = MutableSharedFlow<NavInstructions>()
 
-    @Suppress("DeferredResultUnused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun doOnResume() {
-        Log.d(TAG, "doOnResume")
-        startUpCheck()
-    }
-
-    var onboardingSuccessful : Boolean? = null
-
-    open fun startUpCheck() : Deferred<Boolean>? = viewModelScope.async {
-        Log.d(TAG, "startUpCheck: base")
-        if (!isOnboarded()) {
-            if (onboardingSuccessful == null) {
-                Log.d(TAG, "startUpCheck: not onboarded")
-                navigationInstructions.emit(NavToInstructions(R.id.to_onboarding))
-                true
-            } else {
-                if (onboardingSuccessful == true) {
-                    false
-                } else {
-                    true
-                }
-            }
-        } else if (!isLoggedIn()) {
-            Log.d(TAG, "startUpCheck: not logged in")
-            navigationInstructions.emit(NavToInstructions(R.id.to_login))
-            true
-        } else {
-            Log.d(TAG, "startUpCheck: all good")
-            false
-        }
-    }
-
-    private suspend fun isOnboarded() : Boolean {
+    suspend fun isOnboarded() : Boolean {
         Log.d(TAG, "startUpCheck: checking onboarding")
         return !listOf(hasName(), hasPassword()).awaitAll().contains(false)
     }
 
-    protected fun hasName() = viewModelScope.async {
+    fun hasName() = viewModelScope.async {
         !getName().isNullOrEmpty()
     }
 
-    protected suspend fun hasPassword() = viewModelScope.async {
+    suspend fun hasPassword() = viewModelScope.async {
         !getPassword().isNullOrEmpty()
     }
 
-    private fun isLoggedIn() : Boolean {
+    fun isLoggedIn() : Boolean {
         Log.d(TAG, "startUpCheck: checking logged in")
         return LoginToken.isLoggedIn
     }

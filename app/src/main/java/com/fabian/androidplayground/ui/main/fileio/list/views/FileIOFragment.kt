@@ -28,11 +28,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
-private const val TAG = "FileIOFragment"
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class FileIOFragment : BaseDataBindingFragment<FragmentFileioBinding>(R.layout.fragment_fileio) {
+    override val TAG = "FileIOFragment"
+
     private val fileIOViewModel : FileIOViewModel by viewModels {
         FileIOViewModel.Factory(requireContext().dataStore)
     }
