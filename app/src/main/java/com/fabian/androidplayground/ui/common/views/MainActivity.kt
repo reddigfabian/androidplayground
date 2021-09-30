@@ -1,23 +1,22 @@
 package com.fabian.androidplayground.ui.common.views
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseDataBindingActivity
 import com.fabian.androidplayground.common.datastore.dataStore
-import com.fabian.androidplayground.common.navigation.IntentNavArgs
-import com.fabian.androidplayground.common.utils.IntentUtils
+import com.fabian.androidplayground.common.navigation.executeNavInstructions
 import com.fabian.androidplayground.databinding.ActivityMainBinding
 import com.fabian.androidplayground.ui.common.viewmodels.MainViewModel
-import com.fabian.androidplayground.ui.main.fileio.list.views.FileIOFragmentArgs
-import com.fabian.androidplayground.ui.splash.views.SplashFragmentArgs
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 private const val TAG = "MainActivity"
 
@@ -29,14 +28,20 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
         MainViewModel.Factory(dataStore)
     }
 
-    var nextID = R.id.to_launch
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkIntent(intent)
 
         mainViewModel.getTitleResID().observe(this) { titleResID ->
             supportActionBar?.title = getString(titleResID)
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                mainViewModel.navigationInstructions.collect {
+                    findNavController(R.id.navHostFragment).executeNavInstructions(it)
+                }
+            }
         }
     }
 
@@ -49,25 +54,11 @@ class MainActivity : BaseDataBindingActivity<ActivityMainBinding>(R.layout.activ
         when (intent.action) {
             Intent.ACTION_SEND,
             Intent.ACTION_SEND_MULTIPLE -> {
-                nextID = R.id.to_fileio
+
             }
             else -> {
                 // Handle other intents, if needed
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        setGraphOnce()
-    }
-
-    var graphSet = false
-
-    private fun setGraphOnce() {
-        if (!graphSet) {
-            graphSet = true
-            findNavController(R.id.navHostFragment).setGraph(R.navigation.main_nav_graph, SplashFragmentArgs(nextID, IntentNavArgs.fromIntent(intent)).toBundle())
         }
     }
 }

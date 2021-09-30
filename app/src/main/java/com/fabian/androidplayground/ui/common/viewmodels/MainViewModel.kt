@@ -2,13 +2,13 @@ package com.fabian.androidplayground.ui.common.viewmodels
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
+import com.fabian.androidplayground.common.datastore.dataStore
+import com.fabian.androidplayground.ui.common.coordinators.MainCoordinator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -22,6 +22,12 @@ class MainViewModel private constructor(dataStore : DataStore<Preferences>) : Ba
     }
 
     private val titleResID = MutableLiveData<Int>()
+
+    init {
+        viewModelScope.launch {
+            navigationInstructions.emit(MainCoordinator.start(dataStore))
+        }
+    }
 
     fun getTitleResID() : LiveData<Int> {
         return titleResID

@@ -11,21 +11,16 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.fabian.androidplayground.R
-import com.fabian.androidplayground.common.navigation.IntentNavArgs
 import com.fabian.androidplayground.common.navigation.NavPopInstructions
 import com.fabian.androidplayground.common.navigation.NavToInstructions
 import com.fabian.androidplayground.common.navigation.executeNavInstructions
-import com.fabian.androidplayground.ui.onboarding.views.OnboardingFragment
-import com.fabian.androidplayground.ui.user.login.views.LoginFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private val layoutRes : Int? = null) : Fragment() {
+abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private val layoutRes : Int) : Fragment() {
 
     open val TAG : String = "BaseDataBindingFragment"
 
@@ -46,14 +41,16 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
         }
     }
 
-    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        layoutRes?.let { nonNullLayoutRes ->
-            _viewDataBinding = DataBindingUtil.inflate(inflater, nonNullLayoutRes, container, false)
-            setDataBoundViewModels(binding)
-            return binding.root
-        }
-        Log.d(TAG, "onCreateView: Returning headless fragment")
-        return null
+    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _viewDataBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        setDataBoundViewModels(binding)
+        activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                getViewModel().onBackPressed()
+            }
+
+        })
+        return binding.root
     }
 
     @CallSuper
@@ -69,22 +66,4 @@ abstract class BaseDataBindingFragment<T : ViewDataBinding>(@LayoutRes private v
     }
 
     abstract fun getViewModel() : BaseFragmentViewModel
-
-    open fun getNextID() : Int {
-        return 0
-    }
-
-    open fun getNextIntentArgs() : IntentNavArgs? {
-        return null
-    }
-
-    protected fun goToNext() {
-        if (getNextID() == 0) {
-            findNavController().executeNavInstructions(NavPopInstructions(R.id.onboarding_nav_graph, true))
-        } else {
-            val b = Bundle()
-            b.putParcelable(IntentNavArgs.PARCEL_KEY, getNextIntentArgs())
-            findNavController().executeNavInstructions(NavToInstructions(getNextID(), b))
-        }
-    }
 }

@@ -38,8 +38,6 @@ class FileIOFragment : BaseDataBindingFragment<FragmentFileioBinding>(R.layout.f
         FileIOViewModel.Factory(requireContext().dataStore)
     }
 
-    private val args by navArgs<FileIOFragmentArgs>()
-
     private lateinit var fileListAdapter: FileListAdapter
 
     override fun setDataBoundViewModels(binding: FragmentFileioBinding) {
@@ -52,36 +50,36 @@ class FileIOFragment : BaseDataBindingFragment<FragmentFileioBinding>(R.layout.f
             openDocumentContract.launch(arrayOf("*/*"))
         }
         setupRecycler(view)
-        args.intentArgs?.let { nonNullIntentArgs ->
-            var uriList : List<Uri>? = null
-            var text : String? = null
-            nonNullIntentArgs.extras?.let { nonNullExtras ->
-                when (nonNullIntentArgs.action) {
-                    Intent.ACTION_SEND -> {
-                        if (nonNullIntentArgs.type == "text/plain") {
-                            text = IntentUtils.getTextFromIntentBundle(nonNullExtras)
-                        } else {
-                            uriList = IntentUtils.getFileUriFromIntentBundle(nonNullExtras)
-                        }
-                    }
-                    Intent.ACTION_SEND_MULTIPLE -> {
-                        uriList = IntentUtils.getMultipleFileUrisFromIntentBundle(nonNullExtras)
-                    }
-                    else -> {
-                        // Handle other intents, such as being started from the home screen
-                    }
-                }
-            }
-
-            uriList?.let { uris ->
-                Log.d(TAG, "onViewCreated: ${uris.size} uris")
-                sendFileItemViewModelsToAdapter(mapUrisToFileItemViewModels(uris.toList()))
-            }
-            text?.let { textToSend ->
-                Log.d(TAG, "onViewCreated: textToSend = $textToSend")
-                sendFileItemViewModelsToAdapter(listOf(mapTextToFileItemViewModel(textToSend)))
-            }
-        }
+//        args.intentArgs?.let { nonNullIntentArgs ->
+//            var uriList : List<Uri>? = null
+//            var text : String? = null
+//            nonNullIntentArgs.extras?.let { nonNullExtras ->
+//                when (nonNullIntentArgs.action) {
+//                    Intent.ACTION_SEND -> {
+//                        if (nonNullIntentArgs.type == "text/plain") {
+//                            text = IntentUtils.getTextFromIntentBundle(nonNullExtras)
+//                        } else {
+//                            uriList = IntentUtils.getFileUriFromIntentBundle(nonNullExtras)
+//                        }
+//                    }
+//                    Intent.ACTION_SEND_MULTIPLE -> {
+//                        uriList = IntentUtils.getMultipleFileUrisFromIntentBundle(nonNullExtras)
+//                    }
+//                    else -> {
+//                        // Handle other intents, such as being started from the home screen
+//                    }
+//                }
+//            }
+//
+//            uriList?.let { uris ->
+//                Log.d(TAG, "onViewCreated: ${uris.size} uris")
+//                sendFileItemViewModelsToAdapter(mapUrisToFileItemViewModels(uris.toList()))
+//            }
+//            text?.let { textToSend ->
+//                Log.d(TAG, "onViewCreated: textToSend = $textToSend")
+//                sendFileItemViewModelsToAdapter(listOf(mapTextToFileItemViewModel(textToSend)))
+//            }
+//        }
     }
 
     override fun onStart() {

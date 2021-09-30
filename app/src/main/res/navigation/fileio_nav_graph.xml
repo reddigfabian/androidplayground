@@ -8,10 +8,5 @@
         android:id="@+id/FileIOFragment"
         android:name="com.fabian.androidplayground.ui.main.fileio.list.views.FileIOFragment"
         tools:layout="@layout/fragment_fileio">
-        <argument
-            android:name="intentArgs"
-            app:argType="com.fabian.androidplayground.common.navigation.IntentNavArgs"
-            app:nullable="true"
-            android:defaultValue="@null"/>
     </fragment>
 </navigation>

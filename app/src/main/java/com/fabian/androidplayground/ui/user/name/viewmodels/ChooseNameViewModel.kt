@@ -13,6 +13,8 @@ import com.fabian.androidplayground.R
 import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
 import com.fabian.androidplayground.common.navigation.NavBackInstruction
 import com.fabian.androidplayground.common.navigation.NavPopInstructions
+import com.fabian.androidplayground.ui.user.login.coordinators.LoginCoordinator
+import com.fabian.androidplayground.ui.user.name.coordinators.NameCoordinator
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -27,11 +29,12 @@ class ChooseNameViewModel private constructor(dataStore : DataStore<Preferences>
     }
 
     val name = MutableLiveData<String?>(null)
-    val chooseNameComplete = MutableLiveData(false)
 
     fun submitClick(v : View) {
         name.value?.let { nonNullName ->
-            chooseNameComplete.postValue(true)
+            viewModelScope.launch {
+                navigationInstructions.emit(NameCoordinator.finish(nonNullName))
+            }
         }
     }
 
@@ -49,4 +52,9 @@ class ChooseNameViewModel private constructor(dataStore : DataStore<Preferences>
         }
     }
 
+    override fun onBackPressed() {
+        viewModelScope.launch {
+            navigationInstructions.emit(NameCoordinator.abort())
+        }
+    }
 }

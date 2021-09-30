@@ -59,4 +59,8 @@ abstract class BaseFragmentViewModel(protected val dataStore : DataStore<Prefere
         Log.d(TAG, "startUpCheck: checking logged in")
         return LoginToken.isLoggedIn
     }
+
+    open fun onBackPressed() {
+        Log.d(TAG, "onBackPressed not implemented here")
+    }
 }

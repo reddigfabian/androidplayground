@@ -14,6 +14,7 @@ import com.fabian.androidplayground.common.databinding.BaseFragmentViewModel
 import com.fabian.androidplayground.common.navigation.NavBackInstruction
 import com.fabian.androidplayground.common.navigation.NavPopInstructions
 import com.fabian.androidplayground.common.navigation.NavToInstructions
+import com.fabian.androidplayground.ui.user.password.coordinators.PasswordCoordinator
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -30,15 +31,14 @@ class PasswordViewModel private constructor(dataStore : DataStore<Preferences>) 
     val password = MutableLiveData<String?>(null)
     val confirmPassword = MutableLiveData<String?>(null)
 
-    val passwordEntered = MutableLiveData(false)
-    val passwordConfirmed = MutableLiveData(false)
-
     fun submitClick(v : View) {
         when (v.id) {
             R.id.choosePasswordSubmitButton -> {
                 password.value?.let { nonNullPassword ->
                     if (nonNullPassword.isNotBlank()) {
-                        passwordEntered.postValue(true)
+                        viewModelScope.launch {
+                            navigationInstructions.emit(PasswordCoordinator.navigateToConfirmPassword())
+                        }
                     } else {
                         Toast.makeText(v.context, "Password is blank", Toast.LENGTH_SHORT).show()
                     }
@@ -50,7 +50,7 @@ class PasswordViewModel private constructor(dataStore : DataStore<Preferences>) 
                         if (nonNullPassword == nonNullConfirmPassword) {
                             viewModelScope.launch {
                                 if (submitPasswordAsync(nonNullPassword).await()) {
-                                    passwordConfirmed.postValue(true)
+                                    navigationInstructions.emit(PasswordCoordinator.finish(nonNullPassword))
                                 } else {
                                     Toast.makeText(v.context, "Something went wrong :(", Toast.LENGTH_SHORT).show()
                                 }
@@ -72,6 +72,12 @@ class PasswordViewModel private constructor(dataStore : DataStore<Preferences>) 
             true
         } catch (ex : Exception) {
             false
+        }
+    }
+
+    override fun onBackPressed() {
+        viewModelScope.launch {
+            navigationInstructions.emit(PasswordCoordinator.abort())
         }
     }
 }
