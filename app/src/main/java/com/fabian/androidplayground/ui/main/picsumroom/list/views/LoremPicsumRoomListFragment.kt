@@ -95,7 +95,7 @@ class LoremPicsumRoomListFragment : BaseDataBindingFragment<FragmentLoremPicsumR
             }
         }
 
-        loremPicsumListAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+//        loremPicsumListAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
 //        binding.mainListRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.mainListRecycler.layoutManager = StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL)
