@@ -5,19 +5,19 @@ object Versions {
 
     //IDE
     const val gradleVersionsPlugin = "0.36.0"
-    const val kotlin = "1.5.30"
+    const val kotlin = "1.5.31"
     const val gradlePlugin = "7.0.0"
 
     //App
     //Kotlin
-    const val androidCoreKtx = "1.6.0"
+    const val androidCoreKtx = "1.7.0"
 
     //AndroidX
     const val appCompat = "1.3.1"
     const val paging = "3.1.0-alpha03"
     const val navVersion = "2.3.5"
-    const val lifeCycleRuntime = "2.4.0-alpha03"
-    const val kotlinxCoroutines = "1.5.1"
+    const val lifeCycleRuntime = "2.4.0"
+    const val kotlinxCoroutines = "1.5.2"
 
     //Room
     const val room = "2.4.0-alpha04"
@@ -28,16 +28,16 @@ object Versions {
 
     //Design/UI
     const val material = "1.4.0"
-    const val lottie = "4.1.0"
+    const val lottie = "4.2.0"
     const val glide = "4.12.0"
-    const val coil = "1.3.2"
+    const val coil = "1.4.0"
     const val swipeRefreshLayout = "1.2.0-alpha01"
 
     //Networking
     const val retrofit = "2.9.0"
     const val moshi = "1.12.0"
     const val retrofitCoroutines = "0.9.2"
-    const val retrofitLogInterceptor = "4.9.1"
+    const val retrofitLogInterceptor = "4.9.2"
     const val scarlet = "0.1.12"
 
     //LeakCanary
